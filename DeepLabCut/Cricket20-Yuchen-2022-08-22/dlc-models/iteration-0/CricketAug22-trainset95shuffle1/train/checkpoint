@@ -1,0 +1,6 @@
+model_checkpoint_path: "/home/yuchen/sftpFolder/DeepLabCut/Cricket20-Yuchen-2022-08-22/dlc-models/iteration-0/CricketAug22-trainset95shuffle1/train/snapshot-300000"
+all_model_checkpoint_paths: "/home/yuchen/sftpFolder/DeepLabCut/Cricket20-Yuchen-2022-08-22/dlc-models/iteration-0/CricketAug22-trainset95shuffle1/train/snapshot-296000"
+all_model_checkpoint_paths: "/home/yuchen/sftpFolder/DeepLabCut/Cricket20-Yuchen-2022-08-22/dlc-models/iteration-0/CricketAug22-trainset95shuffle1/train/snapshot-297000"
+all_model_checkpoint_paths: "/home/yuchen/sftpFolder/DeepLabCut/Cricket20-Yuchen-2022-08-22/dlc-models/iteration-0/CricketAug22-trainset95shuffle1/train/snapshot-298000"
+all_model_checkpoint_paths: "/home/yuchen/sftpFolder/DeepLabCut/Cricket20-Yuchen-2022-08-22/dlc-models/iteration-0/CricketAug22-trainset95shuffle1/train/snapshot-299000"
+all_model_checkpoint_paths: "/home/yuchen/sftpFolder/DeepLabCut/Cricket20-Yuchen-2022-08-22/dlc-models/iteration-0/CricketAug22-trainset95shuffle1/train/snapshot-300000"
