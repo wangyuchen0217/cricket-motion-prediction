@@ -1,0 +1,364 @@
+{
+    "T01": {
+        "cricket_name": "Cricket16",
+        "cricket_number": "c16",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0495",
+        "training_iter": "200000",
+        "video_synchronize_range": [400,491],
+        "dataset_type": "train"
+    },
+
+    "T02": {
+        "cricket_name": "Cricket16",
+        "cricket_number": "c16",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0496",
+        "training_iter": "200000",
+        "video_synchronize_range": [410,401],
+        "dataset_type": "train"
+    },
+
+    "T03": {
+        "cricket_name": "Cricket16",
+        "cricket_number": "c16",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0497",
+        "training_iter": "200000",
+        "video_synchronize_range": [360,279],
+        "dataset_type": "test"
+    },
+
+    "T04": {
+        "cricket_name": "Cricket16",
+        "cricket_number": "c16",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0498",
+        "training_iter": "200000",
+        "video_synchronize_range": [1240,325],
+        "dataset_type": "train"
+    },
+
+    "T05": {
+        "cricket_name": "Cricket16",
+        "cricket_number": "c16",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0499",
+        "training_iter": "200000",
+        "video_synchronize_range": [400,410],
+        "dataset_type": "train"
+    },
+
+    "T06": {
+        "cricket_name": "Cricket16",
+        "cricket_number": "c16",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0500",
+        "training_iter": "200000",
+        "video_synchronize_range": [290,483],
+        "dataset_type": "train"
+    },
+
+    "T07": {
+        "cricket_name": "Cricket17",
+        "cricket_number": "c17",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0522",
+        "training_iter": "86000",
+        "video_synchronize_range": [391,330],
+        "dataset_type": "train"
+    },
+        
+    "T08": {
+        "cricket_name": "Cricket17",
+        "cricket_number": "c17",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0523",
+        "training_iter": "86000",
+        "video_synchronize_range": [290,322],
+        "dataset_type": "train"
+    },
+
+    "T09": {
+        "cricket_name": "Cricket17",
+        "cricket_number": "c17",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0524",
+        "training_iter": "86000",
+        "video_synchronize_range": [272,333],
+        "dataset_type": "train"
+    },
+
+    "T10": {
+        "cricket_name": "Cricket17",
+        "cricket_number": "c17",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0525",
+        "training_iter": "86000",
+        "video_synchronize_range": [240,181],
+        "dataset_type": "train"
+    },
+
+    "T11": {
+        "cricket_name": "Cricket17",
+        "cricket_number": "c17",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0526",
+        "training_iter": "86000",
+        "video_synchronize_range": [251,273],
+        "dataset_type": "test"
+    },
+
+    "T12": {
+        "cricket_name": "Cricket18",
+        "cricket_number": "c18",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0558",
+        "training_iter": "180000",
+        "video_synchronize_range": [260,261],
+        "dataset_type": "test"
+    },
+
+    "T13": {
+        "cricket_name": "Cricket18",
+        "cricket_number": "c18",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0559",
+        "training_iter": "180000",
+        "video_synchronize_range": [685,352],
+        "dataset_type": "train"
+    },
+
+    "T14": {
+        "cricket_name": "Cricket18",
+        "cricket_number": "c18",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0560",
+        "training_iter": "180000",
+        "video_synchronize_range": [390,4856],
+        "dataset_type": "train"
+    },
+
+    "T15": {
+        "cricket_name": "Cricket18",
+        "cricket_number": "c18",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0561",
+        "training_iter": "180000",
+        "video_synchronize_range": [380,562],
+        "dataset_type": "train"
+    },
+
+    "T16": {
+        "cricket_name": "Cricket18",
+        "cricket_number": "c18",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0562",
+        "training_iter": "180000",
+        "video_synchronize_range": [380,517],
+        "dataset_type": "train"
+    },
+
+    "T17": {
+        "cricket_name": "Cricket19",
+        "cricket_number": "c19",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0600",
+        "training_iter": "86000",
+        "video_synchronize_range": [379,320],
+        "dataset_type": "train"
+    },
+
+    "T18": {
+        "cricket_name": "Cricket19",
+        "cricket_number": "c19",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0601",
+        "training_iter": "86000",
+        "video_synchronize_range": [300,1020],
+        "dataset_type": "train"
+    },
+
+    "T19": {
+        "cricket_name": "Cricket19",
+        "cricket_number": "c19",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0603",
+        "training_iter": "86000",
+        "video_synchronize_range": [305,352],
+        "dataset_type": "test"
+    },
+
+    "T20": {
+        "cricket_name": "Cricket19",
+        "cricket_number": "c19",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0604",
+        "training_iter": "86000",
+        "video_synchronize_range": [290,442],
+        "dataset_type": "train"
+    },
+
+    "T21": {
+        "cricket_name": "Cricket19",
+        "cricket_number": "c19",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0605",
+        "training_iter": "86000",
+        "video_synchronize_range": [300,370],
+        "dataset_type": "train"
+    },
+
+    "T22": {
+        "cricket_name": "Cricket20",
+        "cricket_number": "c20",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0637",
+        "training_iter": "180000",
+        "video_synchronize_range": [260,413],
+        "dataset_type": "train"
+    },
+
+    "T23": {
+        "cricket_name": "Cricket20",
+        "cricket_number": "c20",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0638",
+        "training_iter": "180000",
+        "video_synchronize_range": [290,216],
+        "dataset_type": "train"
+    },
+
+    "T24": {
+        "cricket_name": "Cricket20",
+        "cricket_number": "c20",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0639",
+        "training_iter": "180000",
+        "video_synchronize_range": [300,254],
+        "dataset_type": "test"
+    },
+
+    "T25": {
+        "cricket_name": "Cricket20",
+        "cricket_number": "c20",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0640",
+        "training_iter": "180000",
+        "video_synchronize_range": [310,380],
+        "dataset_type": "train"
+    },
+
+    "T26": {
+        "cricket_name": "Cricket20",
+        "cricket_number": "c20",
+        "date": "Aug22",
+        "folder_date": "2022-08-22",
+        "video_number": "0641",
+        "training_iter": "180000",
+        "video_synchronize_range": [310,185],
+        "dataset_type": "train"
+    },
+
+    "T27": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0674",
+        "training_iter": "86000",
+        "video_synchronize_range": [330,222],
+        "dataset_type": "train"
+    },
+
+    "T28": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0675",
+        "training_iter": "86000",
+        "video_synchronize_range": [270,552],
+        "dataset_type": "train"
+    },
+
+    "T29": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0676",
+        "training_iter": "86000",
+        "video_synchronize_range": [250,204],
+        "dataset_type": "train"
+    },
+
+    "T30": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0677",
+        "training_iter": "86000",
+        "video_synchronize_range": [320,487],
+        "dataset_type": "test"
+    },
+
+    "T31": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0678",
+        "training_iter": "86000",
+        "video_synchronize_range": [257,107],
+        "dataset_type": "train"
+    },
+
+    "T32": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0679",
+        "training_iter": "86000",
+        "video_synchronize_range": [265,412],
+        "dataset_type": "train"
+    },
+
+    "T33": {
+        "cricket_name": "Cricket21",
+        "cricket_number": "c21",
+        "date": "Oct17",
+        "folder_date": "2021-10-17",
+        "video_number": "0680",
+        "training_iter": "86000",
+        "video_synchronize_range": [332,385],
+        "dataset_type": "train"
+    }
+}
