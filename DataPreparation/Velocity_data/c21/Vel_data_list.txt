@@ -1,4 +1,0 @@
-***.csv
-
-
-Time, Absolute value of velocity,  x velocity, y velocity, rotational velocity, trigger signals
