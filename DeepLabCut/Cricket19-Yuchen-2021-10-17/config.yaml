@@ -1,0 +1,165 @@
+    # Project definitions (do not edit)
+Task: Cricket
+scorer: Pranav
+date: Oct17
+multianimalproject:
+
+    # Project path (change when moving around)
+project_path: /home/yuchen/sftpFolder/DeepLabCut/Cricket19-Yuchen-2021-10-17
+
+    # Annotation data set configuration (and individual video cropping parameters)
+video_sets:
+  /home/yuchen/sftpFolder/DeepLabCut/Cricket19-Yuchen-2022-08-22/videos/PIC_0600.MP4:
+    crop: 0, 640, 0, 360
+  /home/yuchen/sftpFolder/DeepLabCut/Cricket19-Yuchen-2022-08-22/videos/PIC_0601.MP4:
+    crop: 0, 640, 0, 360
+  /home/yuchen/sftpFolder/DeepLabCut/Cricket19-Yuchen-2022-08-22/videos/PIC_0603.MP4:
+    crop: 0, 640, 0, 360
+  /home/yuchen/sftpFolder/DeepLabCut/Cricket19-Yuchen-2022-08-22/videos/PIC_0604.MP4:
+    crop: 0, 640, 0, 360
+  /home/yuchen/sftpFolder/DeepLabCut/Cricket19-Yuchen-2022-08-22/videos/PIC_0605.MP4:
+    crop: 0, 640, 0, 360
+bodyparts:
+- Head
+- Pro
+- Meso
+- Meta
+- LF0
+- LF1
+- LF2
+- LM0
+- LM1
+- LM2
+- LH0
+- LH1
+- LH2
+- RF0
+- RF1
+- RF2
+- RM0
+- RM1
+- RM2
+- RH0
+- RH1
+- RH2
+- Bar
+- Axis
+- Fix
+start: 0
+stop: 1
+numframes2pick: 30
+
+    # Plotting configuration
+skeleton:
+- - Head
+  - Pro
+- - Pro
+  - Meso
+- - Meso
+  - Meta
+- - LF1
+  - LF0
+- - LF0
+  - LM0
+- - LF1
+  - LM0
+- - LM1
+  - LM0
+- - LM0
+  - LH0
+- - LM1
+  - LH0
+- - LH1
+  - LH0
+- - LM0
+  - LH0
+- - LH1
+  - LM0
+- - RF1
+  - RF0
+- - RF0
+  - RM0
+- - RF1
+  - RM0
+- - RM1
+  - RM0
+- - RM0
+  - RH0
+- - RM1
+  - RH0
+- - RH1
+  - RH0
+- - RM0
+  - RH0
+- - RH1
+  - RM0
+- - LF1
+  - LF0
+- - LF1
+  - LF2
+- - LF0
+  - LF2
+- - LM1
+  - LM0
+- - LM1
+  - LM2
+- - LM0
+  - LM2
+- - LH1
+  - LH0
+- - LH1
+  - LH2
+- - LH0
+  - LH2
+- - RF1
+  - RF0
+- - RF1
+  - RF2
+- - RF0
+  - RF2
+- - RM1
+  - RM0
+- - RM1
+  - RM2
+- - RM0
+  - RM2
+- - RH1
+  - RH0
+- - RH1
+  - RH2
+- - RH0
+  - RH2
+- - Axis
+  - Bar
+- - Axis
+  - Fix
+
+skeleton_color: white
+pcutoff: 0.4
+dotsize: 3
+alphavalue: 0.5
+colormap: jet
+
+    # Training,Evaluation and Analysis configuration
+TrainingFraction:
+- 0.95
+iteration: 1
+default_net_type: resnet_50
+default_augmenter:
+snapshotindex: -1
+batch_size: 4
+
+    # Cropping Parameters (for analysis and outlier frame detection)
+cropping: false
+croppedtraining:
+    #if cropping is true for analysis, then set the values here:
+x1: 0
+x2: 640
+y1: 277
+y2: 624
+
+    # Refinement configuration (parameters from annotation dataset configuration also relevant in this stage)
+corner2move2:
+- 50
+- 50
+move2corner: true
