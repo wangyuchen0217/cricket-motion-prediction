@@ -56,6 +56,7 @@ class Encoder(nn.Module):
 
         super().__init__()
 
+        # an Embedding module containing "n_src_vocab" tensors of size "d_word_vec"
         self.src_word_emb = nn.Embedding(n_src_vocab, d_word_vec, padding_idx=pad_idx)
         self.position_enc = PositionalEncoding(d_word_vec, n_position=n_position)
         self.dropout = nn.Dropout(p=dropout)
@@ -148,7 +149,7 @@ class Transformer(nn.Module):
         #
         # Options here:
         #   'emb': multiply \sqrt{d_model} to embedding output
-        #   'prj': multiply (\sqrt{d_model} ^ -1) to linear projection output
+        #   'prj': multiply (\sq-==rt{d_model} ^ -1) to linear projection output
         #   'none': no multiplication
 
         assert scale_emb_or_prj in ['emb', 'prj', 'none']

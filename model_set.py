@@ -4,6 +4,19 @@ This code provides fuctions for building models with neural networks.
 
 import tensorflow as tf
 from tensorflow import keras
+import torch
+from torch import nn
+from torch import Generator
+import transformer.Constants
+import transformer.Modules
+import transformer.Layers
+import transformer.SubLayers
+import transformer.Models
+import transformer.Translator
+import transformer.Optim
+import copy
+
+from torchsummary import summary
 
 def create_lstm_model(node_number, 
                                                 dropout_ratio,
@@ -49,3 +62,14 @@ def create_hlstm_model(node_number,
     model.add(keras.layers.Reshape([time_step,output_num]))
     model.summary()
     return model
+
+model = transformer.Models.Transformer(n_src_vocab=12, n_trg_vocab=3, src_pad_idx=100, trg_pad_idx=10,
+            d_word_vec=512, d_model=512, d_inner=2048,
+            n_layers=6, n_head=8, d_k=64, d_v=64, dropout=0.1, n_position=200,
+            trg_emb_prj_weight_sharing=True, emb_src_trg_weight_sharing=True,
+            scale_emb_or_prj='prj')
+
+for name,parameters in model.named_parameters():
+    print(name,':',parameters.size())
+
+# up to the nn.embedding, see transformer/Models.py

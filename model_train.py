@@ -17,15 +17,15 @@ if __name__ == '__main__':
     
     fold_path = os.getcwd() 
     ###### organize the input and output sequence ######
-    input_pattern = "pattern3" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
+    input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 1
+    time_step = 10
     ###### choose the test mode ###### 
-    out_mod = "estimation" # ["estimation","prediction","recursive"]
-    out_content = "Direction" # ["Vel","Direction"]
+    out_mod = "prediction" # ["estimation","prediction","recursive"]
+    out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "hlstm" # ["lstm","hlstm","arx"]
+    model_type = "transformer" # ["lstm","hlstm","arx","transformer"]
     node_number = 124 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256
@@ -127,6 +127,9 @@ if __name__ == '__main__':
                                                                         time_step)
         model.compile(loss=loss, optimizer=optimizer)
         history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
+    elif model_type == "transformer":
+        make_model(input_num, output_num, N=6, d_model=512, d_ff=1000, head=8, dropout=0.1)
+
     elif model_type == "arx":
         class ARx(tf.keras.Model):
             def __init__(self, units, out_steps, input_num, output_num):
@@ -180,7 +183,7 @@ if __name__ == '__main__':
         history = model.fit(X_train, y_train[:,:,:output_num], epochs=epochs, batch_size=batch_size)
 
     # save the model
-    model_path = fold_path + "/Revise/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
+    model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
     if out_mod == 'recursive':
         model.save_weights(model_path)
     else:
