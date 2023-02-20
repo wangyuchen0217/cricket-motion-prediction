@@ -75,7 +75,7 @@ class ARx(tf.keras.Model):
                 self.dense = tf.keras.layers.Dense(input_num+output_num,
                                                 kernel_regularizer=tf.keras.regularizers.l2(l=0.001))
                 
-'''
+
 model = transformer.Models.Transformer(n_src_vocab=100, n_trg_vocab=10, src_pad_idx=None, trg_pad_idx=None,
             d_word_vec=12, d_model=12, d_inner=2048,
             n_layers=6, n_head=8, d_k=64, d_v=64, dropout=0.1, n_position=200,
@@ -86,4 +86,3 @@ for name,parameters in model.named_parameters():
     print(name,':',parameters.size())
 
 # up to the nn.embedding, see transformer/Models.py
-'''
