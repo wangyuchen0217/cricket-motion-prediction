@@ -63,6 +63,19 @@ def create_hlstm_model(node_number,
     model.summary()
     return model
 
+class ARx(tf.keras.Model):
+            def __init__(self, units, out_steps, input_num, output_num):
+                super().__init__()
+                self.out_steps = out_steps
+                self.units = units
+                self.lstm_cell = tf.keras.layers.LSTMCell(units, kernel_regularizer=tf.keras.regularizers.l2(l=1e-7))
+                # Also wrap the LSTMCell in an RNN to simplify the `warmup` method.
+                self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)
+                self.dropout = tf.keras.layers.Dropout(rate=0.5)
+                self.dense = tf.keras.layers.Dense(input_num+output_num,
+                                                kernel_regularizer=tf.keras.regularizers.l2(l=0.001))
+                
+'''
 model = transformer.Models.Transformer(n_src_vocab=100, n_trg_vocab=10, src_pad_idx=None, trg_pad_idx=None,
             d_word_vec=12, d_model=12, d_inner=2048,
             n_layers=6, n_head=8, d_k=64, d_v=64, dropout=0.1, n_position=200,
@@ -73,3 +86,4 @@ for name,parameters in model.named_parameters():
     print(name,':',parameters.size())
 
 # up to the nn.embedding, see transformer/Models.py
+'''

@@ -25,8 +25,8 @@ if __name__ == '__main__':
     out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "transformer" # ["lstm","hlstm","arx","transformer"]
-    node_number = 124 # ["lstm:83","hlstm:124","arx:100"]
+    model_type = "arx" # ["lstm","hlstm","arx","transformer"]
+    node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256
     epochs = 100
@@ -131,19 +131,7 @@ if __name__ == '__main__':
         make_model(input_num, output_num, N=6, d_model=512, d_ff=1000, head=8, dropout=0.1)
 
     elif model_type == "arx":
-        class ARx(tf.keras.Model):
-            def __init__(self, units, out_steps, input_num, output_num):
-                super().__init__()
-                self.out_steps = out_steps
-                self.units = units
-                self.lstm_cell = tf.keras.layers.LSTMCell(units, kernel_regularizer=tf.keras.regularizers.l2(l=1e-7))
-                # Also wrap the LSTMCell in an RNN to simplify the `warmup` method.
-                self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)
-                self.dropout = tf.keras.layers.Dropout(rate=0.5)
-                self.dense = tf.keras.layers.Dense(input_num+output_num,
-                                                kernel_regularizer=tf.keras.regularizers.l2(l=0.001))
-
-        model = ARx(units=100, out_steps=time_step, input_num=input_num, output_num=output_num) 
+        model = ARx(units=100, out_steps=10, input_num=12, output_num=3)    
 
         def warmup(self, inputs):
             # inputs.shape => (batch, time, features)
@@ -152,9 +140,8 @@ if __name__ == '__main__':
             # predictions.shape => (batch, features)
             prediction = self.dense(x)
             return prediction, state
-        
         ARx.warmup = warmup
-                    
+
         def call(self, inputs, training=None):
             # Use a TensorArray to capture dynamically unrolled outputs.
             predictions = []
@@ -177,7 +164,6 @@ if __name__ == '__main__':
             # predictions.shape => (batch, time, features)
             predictions = tf.transpose(predictions, [1, 0, 2])
             return predictions
-
         ARx.call = call
         model.compile(loss=loss, optimizer=optimizer)
         history = model.fit(X_train, y_train[:,:,:output_num], epochs=epochs, batch_size=batch_size)
