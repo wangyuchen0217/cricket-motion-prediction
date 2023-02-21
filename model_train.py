@@ -21,11 +21,11 @@ if __name__ == '__main__':
     window_size = 100
     time_step = 10
     ###### choose the test mode ###### 
-    out_mod = "prediction" # ["estimation","prediction","recursive"]
+    out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
     out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "arx" # ["lstm","hlstm","arx","transformer"]
+    model_type = "trans" # ["lstm","hlstm","arx","trans"]
     node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     print("y_train_scaled.shape: (%2d, %2d)" %(y_train_scaled.shape[0], y_train_scaled.shape[1]))
     print("")
     # create input and output sequence of train & test set
-    X_train, y_train = create_inout_sequences(X_train_scaled, y_train_scaled, window_size, time_step, out_mod) 
+    X_train, y_train = create_inout_sequences(X_train_scaled, y_train_scaled, window_size, time_step, out_mod, model_type) 
     names = locals()
     for i in range(6):
         cricket_number = test_trails[i]
@@ -104,7 +104,8 @@ if __name__ == '__main__':
                                                                                                                                                                                                                         eval("y_test_scaled_" + cricket_number), 
                                                                                                                                                                                                                         window_size, 
                                                                                                                                                                                                                         time_step, 
-                                                                                                                                                                                                                        out_mod)
+                                                                                                                                                                                                                        out_mod,
+                                                                                                                                                                                                                        model_type)
     print("X_train.shape: (%2d, %2d, %2d)" %(X_train.shape[0], X_train.shape[1], X_train.shape[2]))
     print("y_train.shape: (%2d, %2d, %2d)" %(y_train.shape[0], y_train.shape[1], y_train.shape[2]))
 
@@ -128,7 +129,7 @@ if __name__ == '__main__':
         model.compile(loss=loss, optimizer=optimizer)
         history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
     elif model_type == "transformer":
-        make_model(input_num, output_num, N=6, d_model=512, d_ff=1000, head=8, dropout=0.1)
+        pass
 
     elif model_type == "arx":
         model = ARx(units=100, out_steps=10, input_num=12, output_num=3)    
@@ -170,7 +171,7 @@ if __name__ == '__main__':
 
     # save the model
     model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    if out_mod == 'recursive':
+    if out_mod == "mul" and model_type == "arx":
         model.save_weights(model_path)
     else:
         model.save(model_path) 
