@@ -8,6 +8,7 @@ import torch
 from torch import nn
 #from torchsummary import summary
 
+'''lstm'''
 def create_lstm_model(node_number, 
                                                 dropout_ratio,
                                                 window_size, 
@@ -29,6 +30,7 @@ def create_lstm_model(node_number,
     model.summary()
     return model
 
+'''hlstm'''
 def create_hlstm_model(node_number, 
                                                     dropout_ratio,
                                                     window_size, 
@@ -53,6 +55,7 @@ def create_hlstm_model(node_number,
     model.summary()
     return model
 
+'''arx'''
 class ARx(tf.keras.Model):
             def __init__(self, units, out_steps, input_num, output_num):
                 super().__init__()
@@ -115,3 +118,10 @@ class TransAm(nn.Module):
         mask = (torch.triu(torch.ones(sz, sz)) == 1).transpose(0, 1)
         mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
         return mask
+    
+def get_batch(source, i,batch_size):
+    seq_len = min(batch_size, len(source) - 1 - i)
+    data = source[i:i+seq_len]    
+    input = torch.stack(torch.stack([item[0] for item in data]).chunk(input_window,1)) # 1 is feature size
+    target = torch.stack(torch.stack([item[1] for item in data]).chunk(input_window,1))
+    return input, target

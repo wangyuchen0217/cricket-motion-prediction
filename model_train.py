@@ -9,6 +9,7 @@ import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "7"
 import json
 import numpy as np
+import torch
 from window_generator import *
 from model_set import *
 from model_predict import *
@@ -128,8 +129,6 @@ if __name__ == '__main__':
                                                                         time_step)
         model.compile(loss=loss, optimizer=optimizer)
         history = model.fit(X_train, y_train, epochs=epochs, batch_size=batch_size)
-    elif model_type == "transformer":
-        pass
 
     elif model_type == "arx":
         model = ARx(units=100, out_steps=10, input_num=12, output_num=3)    
@@ -169,9 +168,16 @@ if __name__ == '__main__':
         model.compile(loss=loss, optimizer=optimizer)
         history = model.fit(X_train, y_train[:,:,:output_num], epochs=epochs, batch_size=batch_size)
 
+    elif model_type == "transformer":
+        training_dataset = np.array(X_train, y_train)
+        training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=32, shuffle=True)
+        loss =torch.nn.MSELoss()
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+        pass
+
     # save the model
     model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    if out_mod == "mul" and model_type == "arx":
+    if model_type == "arx":
         model.save_weights(model_path)
     else:
         model.save(model_path) 
