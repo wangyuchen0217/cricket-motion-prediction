@@ -57,21 +57,23 @@ def create_inout_sequences(X, y, window_size, time_step, out_mod, model_type):
     width = len(X[0])
     # lenth-(window_size+future_step)+1 = lenth-window_size-(future_step-1)
     for i in range(lenth - window_size - time_step+1):
-        feature = X[i:i+window_size, :]
         if out_mod == "sgl":
             if model_type == "lstm" or "hlstm":
+                feature = X[i:i+window_size, :]
                 label = y[i+window_size, :].reshape(1,-1)
             elif model_type == "trans":
                 feature = X[i:i+window_size,:]
                 label = y[i+time_step:i+window_size+time_step,:]
         elif out_mod == "mul":
             if model_type == "lstm" or "hlstm":
+                feature = X[i:i+window_size, :]
                 label = y[i+window_size:i+window_size+time_step, :] 
             elif model_type == "arx":
+                feature = X[i:i+window_size, :]
                 label = np.hstack((y[i+window_size:i+window_size+time_step, :],
                                                     X[i+window_size:i+window_size+time_step, :]))
             elif model_type == "trans":
-                feature = np.append(X[i:i+window_size,:], [[0]*width]*time_step ) ###dimension 
+                feature = np.append(X[i:i+window_size,:], [[0]*width]*time_step ) 
                 label = y[i:i+window_size+time_step,:]
         input.append(feature)
         output.append(label)

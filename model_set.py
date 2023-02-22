@@ -6,6 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 import torch
 from torch import nn
+import math
 #from torchsummary import summary
 
 '''lstm'''
@@ -54,19 +55,6 @@ def create_hlstm_model(node_number,
     model.add(keras.layers.Reshape([time_step,output_num]))
     model.summary()
     return model
-
-'''arx'''
-class ARx(tf.keras.Model):
-            def __init__(self, units, out_steps, input_num, output_num):
-                super().__init__()
-                self.out_steps = out_steps
-                self.units = units
-                self.lstm_cell = tf.keras.layers.LSTMCell(units, kernel_regularizer=tf.keras.regularizers.l2(l=1e-7))
-                # Also wrap the LSTMCell in an RNN to simplify the `warmup` method.
-                self.lstm_rnn = tf.keras.layers.RNN(self.lstm_cell, return_state=True)
-                self.dropout = tf.keras.layers.Dropout(rate=0.5)
-                self.dense = tf.keras.layers.Dense(input_num+output_num,
-                                                kernel_regularizer=tf.keras.regularizers.l2(l=0.001))
                 
 '''transformer'''
 class PositionalEncoding(nn.Module):
@@ -119,9 +107,37 @@ class TransAm(nn.Module):
         mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
         return mask
     
-def get_batch(source, i,batch_size):
-    seq_len = min(batch_size, len(source) - 1 - i)
-    data = source[i:i+seq_len]    
-    input = torch.stack(torch.stack([item[0] for item in data]).chunk(input_window,1)) # 1 is feature size
-    target = torch.stack(torch.stack([item[1] for item in data]).chunk(input_window,1))
-    return input, target
+def train_one_epoch(model, training_loader, loss_fn, optimizer):
+    running_loss = 0.
+    last_loss = 0.
+    # Here, we use enumerate(training_loader) instead of
+    # iter(training_loader) so that we can track the batch
+    # index and do some intra-epoch reporting
+    for i, data in enumerate(training_loader):
+        # Every data instance is an input + label pair
+        inputs, labels = data
+        # Zero your gradients for every batch!
+        optimizer.zero_grad()
+        # Make predictions for this batch
+        outputs = model(inputs)
+        # Compute the loss and its gradients
+        loss = loss_fn(outputs, labels)
+        loss.backward()
+        # Adjust learning weights
+        optimizer.step()
+        # Gather data and report
+        running_loss += loss.item()
+        if i % 1000 == 999:
+            last_loss = running_loss / 1000 # loss per batch
+            print('  batch {} loss: {}'.format(i + 1, last_loss))
+            running_loss = 0.
+    return last_loss
+
+def train(EPOCHS, model, training_loader, loss_fn, optimizer):
+    epoch_number = 0
+    for epoch in range(EPOCHS):
+        print('EPOCH {}:'.format(epoch_number + 1))
+        # Make sure gradient tracking is on, and do a pass over the data
+        model.train(True)
+        train_one_epoch(model, training_loader, loss_fn, optimizer)
+        epoch_number += 1
