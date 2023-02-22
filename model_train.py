@@ -17,16 +17,16 @@ if __name__ == '__main__':
     
     fold_path = os.getcwd() 
     ###### organize the input and output sequence ######
-    input_pattern = "pattern3" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
+    input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 1
+    time_step = 10
     ###### choose the test mode ###### 
-    out_mod = "estimation" # ["estimation","prediction","recursive"]
-    out_content = "Direction" # ["Vel","Direction"]
+    out_mod = "recursive" # ["estimation","prediction","recursive"]
+    out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "hlstm" # ["lstm","hlstm","arx"]
-    node_number = 124 # ["lstm:83","hlstm:124","arx:100"]
+    model_type = "arx" # ["lstm","hlstm","arx"]
+    node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256
     epochs = 100
