@@ -26,7 +26,7 @@ if __name__ == '__main__':
     out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "arx" # ["lstm","hlstm","arx","trans"]
+    model_type = "trans" # ["lstm","hlstm","arx","trans"]
     node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256
@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
     elif model_type == "trans":
         model = TransAm()
-        training_dataset = np.vstack((X_train, y_train))
+        training_dataset = np.concatenate((X_train, y_train), axis=2)
         training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=32, shuffle=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
