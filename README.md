@@ -7,4 +7,7 @@ model_predict.py
 
 model_predict.py
     def get_results
-    pred_test_scaled referred before the assignment
+        pred_test = y_scaler.inverse_transform(pred_test_scaled)
+                Expected 2D array, got 1D array instead:
+                array=[].
+                Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample.

@@ -102,6 +102,8 @@ def get_results(X_test,
                                 out_content, 
                                 input_pattern,
                                 fold_path):
+    pred_test_scaled = []
+    label_test_scaled = []
     if out_mod == "sgl":
         if model_type == ("lstm" or "hlstm"):
             pred_test_scaled = get_prediction_from_estimation(X_test, model, output_num)
