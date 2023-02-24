@@ -8,6 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import stats
+import torch
 
 def get_rmse(y_pred,y):
     size = y_pred.shape[0]
@@ -52,8 +53,8 @@ def get_prediction_from_sequence(input, output_scaled,
     return np.reshape(Y_preds,(-1,output_num))
 
 def get_prediction_from_recursive(input, output_scaled, 
-                                                                        model, time_step, 
-                                                                        window_size, output_num):
+                                                                            model, time_step, 
+                                                                            window_size):
     predictions = model.call(input)
     m = len(input) 
     n = len(output_scaled)
@@ -70,6 +71,24 @@ def get_prediction_from_recursive(input, output_scaled,
         Y_preds = Y_preds[:-remove,:]
     return Y_preds
 
+def get_prediction_from_transformer(input, output_scaled, 
+                                                                                model, time_step, 
+                                                                                window_size, output_num):
+    m = len(input) 
+    n = len(output_scaled)
+    remainder = (n-window_size) % time_step
+    for i in range(0, m, time_step):
+        X = input[i, :, :][np.newaxis]
+        if i == 0:
+            Y_preds = model(torch.tensor(X).float()).detach().numpy()
+        else:
+            y_pred = model(torch.tensor(X).float()).detach().numpy()
+            Y_preds = np.concatenate((Y_preds, y_pred),axis=1)
+    if remainder != 0:
+        remove = time_step - remainder
+        Y_preds = Y_preds[:,:-remove,:]
+    return np.reshape(Y_preds,(-1,output_num))
+
 def get_results(X_test,
                                 y_test_scaled,
                                 out_mod, 
@@ -83,19 +102,28 @@ def get_results(X_test,
                                 out_content, 
                                 input_pattern,
                                 fold_path):
-    if out_mod == "estimation":
-        pred_test_scaled = get_prediction_from_estimation(X_test, model, output_num)
-        label_test_scaled = y_test_scaled[window_size:,:]
-    elif out_mod == "prediction":
-        pred_test_scaled = get_prediction_from_sequence(X_test, y_test_scaled, 
+    if out_mod == "sgl":
+        if model_type == ("lstm" or "hlstm"):
+            pred_test_scaled = get_prediction_from_estimation(X_test, model, output_num)
+            label_test_scaled = y_test_scaled[window_size:,:]
+        elif model_type == "trans":
+            pass
+    elif out_mod == "mul":
+        if model_type == ("lstm" or "hlstm"):
+            pred_test_scaled = get_prediction_from_sequence(X_test, y_test_scaled, 
                                                                                                                     model, time_step, 
                                                                                                                     window_size, output_num)
-        label_test_scaled = y_test_scaled[window_size:-time_step,:]
-    elif out_mod == "recursive":
-        pred_test_scaled = get_prediction_from_recursive(X_test, y_test_scaled, 
-                                                                                                                    model, time_step, 
-                                                                                                                    window_size, output_num)
-        label_test_scaled = y_test_scaled[window_size:-time_step,:]
+            label_test_scaled = y_test_scaled[window_size:-time_step,:]
+        elif model_type == "arx":
+            pred_test_scaled = get_prediction_from_recursive(X_test, y_test_scaled, 
+                                                                                                                        model, time_step, 
+                                                                                                                        window_size)
+            label_test_scaled = y_test_scaled[window_size:-time_step,:]
+        elif out_mod == "trans":
+            pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
+                                                                                                                        model, time_step, 
+                                                                                                                        window_size, output_num)
+            label_test_scaled = y_test_scaled[window_size:-time_step,:]
     # de-normalization
     pred_test = y_scaler.inverse_transform(pred_test_scaled)
     label_test = y_scaler.inverse_transform(label_test_scaled)
@@ -109,7 +137,7 @@ def get_results(X_test,
     elif out_content == "Vel":
         df_prediction_results = pd.DataFrame(data=prediction_results, 
                                                                                         columns=["pred_vel", "pred_vel_x", "pred_vel_y", "label_vel", "label_vel_x", "label_vel_y"])
-    results_path = fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_" + out_content + "_" + input_pattern + ".csv"
+    results_path = fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_" + out_content + "_" + input_pattern + ".csv"
     df_prediction_results.to_csv(path_or_buf=results_path, header=True, index=True)
 
 def direction_results_visualization(model_type,
@@ -118,7 +146,7 @@ def direction_results_visualization(model_type,
                                                                         cricket_number, 
                                                                         input_pattern,
                                                                         fold_path):
-    results_path = fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Direction_" + input_pattern +  ".csv"
+    results_path = fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Direction_" + input_pattern +  ".csv"
     results = pd.read_csv(results_path, header=0, usecols=[1, 2, 3, 4])
     results = np.array(results)
     
@@ -136,7 +164,7 @@ def direction_results_visualization(model_type,
     plt.xlabel('Time t [s]',fontsize=14)
     plt.ylabel('Direction_x [vec]',fontsize=14)
     plt.title('Direction_x_'+cricket_number,fontsize=14)
-    plt.savefig(fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Direction_x_" + input_pattern +  ".png",bbox_inches = 'tight')
+    plt.savefig(fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Direction_x_" + input_pattern +  ".png",bbox_inches = 'tight')
     #plt.legend(fontsize=14)
 
     plt.figure(figsize=(12, 3))
@@ -147,7 +175,7 @@ def direction_results_visualization(model_type,
     plt.xlabel('Time t [s]',fontsize=14)
     plt.ylabel('Direction_y [vec]',fontsize=14)
     plt.title('Direction_y_'+cricket_number,fontsize=14)
-    plt.savefig(fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Direction_y_" + input_pattern +  ".png",bbox_inches = 'tight')
+    plt.savefig(fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Direction_y_" + input_pattern +  ".png",bbox_inches = 'tight')
     #plt.legend(fontsize=14)
     
     direction_x_rmse = get_rmse(pred_test[:,0],label_test[:,0])
@@ -164,7 +192,7 @@ def vel_results_visualization(model_type,
                                                             cricket_number, 
                                                             input_pattern,
                                                             fold_path):
-    results_path = fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_" + input_pattern +  ".csv"
+    results_path = fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_" + input_pattern +  ".csv"
     results = pd.read_csv(results_path, header=0, usecols=[1, 2, 3, 4, 5, 6])
     results = np.array(results)
     
@@ -182,7 +210,7 @@ def vel_results_visualization(model_type,
     plt.xlabel('Time t [s]',fontsize=14)
     plt.ylabel('Vel [mm/s]',fontsize=14)
     plt.title('Vel_'+cricket_number,fontsize=14)
-    plt.savefig(fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_" + input_pattern +  ".png",bbox_inches = 'tight')
+    plt.savefig(fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_" + input_pattern +  ".png",bbox_inches = 'tight')
     #plt.legend(fontsize=14)
     
     plt.figure(figsize=(12, 3))
@@ -193,7 +221,7 @@ def vel_results_visualization(model_type,
     plt.xlabel('Time t [s]',fontsize=14)
     plt.ylabel('Vel_x [mm/s]',fontsize=14)
     plt.title('Vel_x_'+cricket_number,fontsize=14)
-    plt.savefig(fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_x_" + input_pattern +  ".png",bbox_inches = 'tight')
+    plt.savefig(fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_x_" + input_pattern +  ".png",bbox_inches = 'tight')
     #plt.legend(fontsize=14)
 
     plt.figure(figsize=(12, 3))
@@ -204,7 +232,7 @@ def vel_results_visualization(model_type,
     plt.xlabel('Time t [s]',fontsize=14)
     plt.ylabel('Vel_y [mm/s]',fontsize=14)
     plt.title('Vel_y_'+cricket_number,fontsize=14)
-    plt.savefig(fold_path + "/Revise/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_y_" + input_pattern +  ".png",bbox_inches = 'tight')
+    plt.savefig(fold_path + "/Evaluation/Results/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + cricket_number + "_Vel_y_" + input_pattern +  ".png",bbox_inches = 'tight')
     #plt.legend(fontsize=14)
     
     vel_rmse = get_rmse(pred_test[:,0],label_test[:,0])

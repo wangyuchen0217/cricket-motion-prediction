@@ -21,11 +21,11 @@ if __name__ == '__main__':
     window_size = 100
     time_step = 1
     ###### choose the output mode ###### 
-    out_mod = "estimation" # ["estimation","prediction","recursive"]
+    out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
     out_content = "Direction" # ["Vel","Direction"]
     test_trails = ["c16","c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "hlstm" # ["lstm","hlstm","arx"]
+    model_type = "hlstm" # ["lstm","hlstm","arx","trans"]
 
     # generate the input_num of the sequence
     if input_pattern == "pattern1":
@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # load the model
     model_path = fold_path + "/Revise/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    if out_mod == 'recursive':
+    if model_type == 'arx':
         class ARx(tf.keras.Model):
             def __init__(self, units, out_steps, input_num, output_num):
                 super().__init__()

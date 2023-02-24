@@ -184,12 +184,13 @@ if __name__ == '__main__':
     elif model_type == "trans":
         model = TransAm()
         training_dataset = np.concatenate((X_train, y_train), axis=2)
-        training_loader = torch.utils.data.DataLoader(training_dataset, batch_size=32, shuffle=True)
+        training_loader_tensor = torch.from_numpy(training_dataset).float()
+        training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=2, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
+        #train(EPOCHS=1, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
         
-
+    '''
     # save the model
     model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
     if model_type == "arx":
@@ -198,6 +199,9 @@ if __name__ == '__main__':
         torch.save(model, model_path)
     else:
         model.save(model_path) 
+        '''
+    model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
+    model = torch.load(model_path)
 
     # get results
     for i in range (6):
