@@ -6,7 +6,7 @@ Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "7"
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
 import json
 import numpy as np
 import torch
@@ -188,7 +188,7 @@ if __name__ == '__main__':
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=100, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
+        train(EPOCHS=epochs, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
         
 
     # save the model
