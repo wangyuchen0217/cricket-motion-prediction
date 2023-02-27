@@ -82,7 +82,7 @@ def get_prediction_from_transformer(input, output_scaled,
         if i == 0:
             Y_preds = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:] # [:,-10:,:] for 10-step prediction
         else:
-            y_pred = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:]
+            y_pred = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:] # pred.shape: (1, 10, out_num)
             Y_preds = np.concatenate((Y_preds, y_pred),axis=1)
     if remainder != 0:
         remove = time_step - remainder
@@ -102,8 +102,8 @@ def get_results(X_test,
                                 out_content, 
                                 input_pattern,
                                 fold_path):
-    pred_test_scaled = []
-    label_test_scaled = []
+    pred_test_scaled = None
+    label_test_scaled = None
     if out_mod == "sgl":
         if model_type == ("lstm" or "hlstm"):
             pred_test_scaled = get_prediction_from_estimation(X_test, model, output_num)
@@ -121,7 +121,7 @@ def get_results(X_test,
                                                                                                                         model, time_step, 
                                                                                                                         window_size)
             label_test_scaled = y_test_scaled[window_size:-time_step,:]
-        elif out_mod == "trans":
+        elif model_type == "trans":
             pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
                                                                                                                         model, time_step, 
                                                                                                                         window_size, output_num)

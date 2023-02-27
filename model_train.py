@@ -203,18 +203,29 @@ if __name__ == '__main__':
     model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
     model = torch.load(model_path)
 
-    # # get results
-    # for i in range (6):
-    #     cricket_number = test_trails[i]
-    #     X_test = eval("X_test_" + cricket_number)
-    #     y_test_scaled = eval("y_test_scaled_" + cricket_number)
-    #     get_results(X_test, y_test_scaled, out_mod, model, y_scaler, model_type, 
-    #                             output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path)
+    # get results
+    for i in range (6):
+        cricket_number = test_trails[i]
+        X_test = eval("X_test_" + cricket_number)
+        y_test_scaled = eval("y_test_scaled_" + cricket_number)
+        get_results(X_test, y_test_scaled, out_mod, model, y_scaler, model_type, 
+                                output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path)
 
-cricket_number = test_trails[2]
-X_test = eval("X_test_" + cricket_number)
-y_test_scaled = eval("y_test_scaled_" + cricket_number)
-X = X_test[i, :, :][np.newaxis]
-Y_preds = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:]
-print(Y_preds.shape)
+# pred_test_scaled = None
+# label_test_scaled = None
+# cricket_number = test_trails[5]
+# X_test = eval("X_test_" + cricket_number)
+# y_test_scaled = eval("y_test_scaled_" + cricket_number)
+# if out_mod == "mul":
+#     if model_type == "trans":
+#         pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
+#                                                                                         model, time_step, 
+#                                                                                         window_size, output_num)
+#         label_test_scaled = y_test_scaled[window_size:-time_step,:]
+# print("pred_test_scaled.shape: (%2d, %2d)" %(pred_test_scaled.shape[0], pred_test_scaled.shape[1]))
+# print("label_test_scaled.shape: (%2d, %2d)" %(label_test_scaled.shape[0], label_test_scaled.shape[1]))
+# pred_test = y_scaler.inverse_transform(pred_test_scaled)
+# label_test = y_scaler.inverse_transform(label_test_scaled)
+# print("pred_test.shape: (%2d, %2d)" %(pred_test.shape[0], pred_test.shape[1]))
+# print("label_test.shape: (%2d, %2d)" %(label_test.shape[0], label_test.shape[1]))
           
