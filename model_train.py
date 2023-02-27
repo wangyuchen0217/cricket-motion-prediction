@@ -182,26 +182,26 @@ if __name__ == '__main__':
         history = model.fit(X_train, y_train[:,:,:output_num], epochs=epochs, batch_size=batch_size)
 
     elif model_type == "trans":
-        model = TransAm()
+        model = TransAm(feature_size=input_num,target_size=output_num,num_layers=1,dropout=0.1)
         training_dataset = np.concatenate((X_train, y_train), axis=2)
         training_loader_tensor = torch.from_numpy(training_dataset).float()
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    #     train(EPOCHS=1, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
+        train(EPOCHS=1, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
         
 
-    # # save the model
-    # model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    # if model_type == "arx":
-    #     model.save_weights(model_path)
-    # elif model_type == "trans":
-    #     torch.save(model, model_path)
-    # else:
-    #     model.save(model_path) 
-
+    # save the model
     model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    model = torch.load(model_path)
+    if model_type == "arx":
+        model.save_weights(model_path)
+    elif model_type == "trans":
+        torch.save(model, model_path)
+    else:
+        model.save(model_path) 
+
+    # model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
+    # model = torch.load(model_path)
 
     # get results
     for i in range (6):
@@ -210,22 +210,3 @@ if __name__ == '__main__':
         y_test_scaled = eval("y_test_scaled_" + cricket_number)
         get_results(X_test, y_test_scaled, out_mod, model, y_scaler, model_type, 
                                 output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path)
-
-# pred_test_scaled = None
-# label_test_scaled = None
-# cricket_number = test_trails[5]
-# X_test = eval("X_test_" + cricket_number)
-# y_test_scaled = eval("y_test_scaled_" + cricket_number)
-# if out_mod == "mul":
-#     if model_type == "trans":
-#         pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
-#                                                                                         model, time_step, 
-#                                                                                         window_size, output_num)
-#         label_test_scaled = y_test_scaled[window_size:-time_step,:]
-# print("pred_test_scaled.shape: (%2d, %2d)" %(pred_test_scaled.shape[0], pred_test_scaled.shape[1]))
-# print("label_test_scaled.shape: (%2d, %2d)" %(label_test_scaled.shape[0], label_test_scaled.shape[1]))
-# pred_test = y_scaler.inverse_transform(pred_test_scaled)
-# label_test = y_scaler.inverse_transform(label_test_scaled)
-# print("pred_test.shape: (%2d, %2d)" %(pred_test.shape[0], pred_test.shape[1]))
-# print("label_test.shape: (%2d, %2d)" %(label_test.shape[0], label_test.shape[1]))
-          
