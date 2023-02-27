@@ -80,9 +80,9 @@ def get_prediction_from_transformer(input, output_scaled,
     for i in range(0, m, time_step):
         X = input[i, :, :][np.newaxis]
         if i == 0:
-            Y_preds = model(torch.tensor(X).float()).detach().numpy()
+            Y_preds = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:] # [:,-10:,:] for 10-step prediction
         else:
-            y_pred = model(torch.tensor(X).float()).detach().numpy()
+            y_pred = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:]
             Y_preds = np.concatenate((Y_preds, y_pred),axis=1)
     if remainder != 0:
         remove = time_step - remainder

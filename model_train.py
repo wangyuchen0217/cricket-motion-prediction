@@ -188,26 +188,33 @@ if __name__ == '__main__':
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        #train(EPOCHS=1, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
+    #     train(EPOCHS=1, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
         
-    '''
-    # save the model
-    model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    if model_type == "arx":
-        model.save_weights(model_path)
-    elif model_type == "trans":
-        torch.save(model, model_path)
-    else:
-        model.save(model_path) 
-        '''
+
+    # # save the model
+    # model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
+    # if model_type == "arx":
+    #     model.save_weights(model_path)
+    # elif model_type == "trans":
+    #     torch.save(model, model_path)
+    # else:
+    #     model.save(model_path) 
+
     model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
     model = torch.load(model_path)
 
-    # get results
-    for i in range (6):
-        cricket_number = test_trails[i]
-        X_test = eval("X_test_" + cricket_number)
-        y_test_scaled = eval("y_test_scaled_" + cricket_number)
-        get_results(X_test, y_test_scaled, out_mod, model, y_scaler, model_type, 
-                                output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path)
-                                
+    # # get results
+    # for i in range (6):
+    #     cricket_number = test_trails[i]
+    #     X_test = eval("X_test_" + cricket_number)
+    #     y_test_scaled = eval("y_test_scaled_" + cricket_number)
+    #     get_results(X_test, y_test_scaled, out_mod, model, y_scaler, model_type, 
+    #                             output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path)
+
+cricket_number = test_trails[2]
+X_test = eval("X_test_" + cricket_number)
+y_test_scaled = eval("y_test_scaled_" + cricket_number)
+X = X_test[i, :, :][np.newaxis]
+Y_preds = model(torch.tensor(X).float()).detach().numpy()[:,-10:,:]
+print(Y_preds.shape)
+          

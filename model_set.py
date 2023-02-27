@@ -75,7 +75,7 @@ class PositionalEncoding(nn.Module):
           
 
 class TransAm(nn.Module):
-    def __init__(self,feature_size=12,num_layers=1,dropout=0.1):
+    def __init__(self,feature_size=12,target_size=3,num_layers=1,dropout=0.1):
         super(TransAm, self).__init__()
         self.model_type = 'Transformer'
         
@@ -83,7 +83,7 @@ class TransAm(nn.Module):
         self.pos_encoder = PositionalEncoding(feature_size)
         self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=4, dropout=dropout)
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=num_layers)        
-        self.decoder = nn.Linear(feature_size,1)
+        self.decoder = nn.Linear(feature_size,target_size)
         self.init_weights()
 
     def init_weights(self):
