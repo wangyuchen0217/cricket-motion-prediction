@@ -188,7 +188,7 @@ if __name__ == '__main__':
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=1, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
+        train(EPOCHS=100, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
         
 
     # save the model
