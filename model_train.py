@@ -185,7 +185,7 @@ if __name__ == '__main__':
         model = TransAm(feature_size=input_num,target_size=output_num,num_layers=1,dropout=0.1)
         training_dataset = np.concatenate((X_train, y_train), axis=2)
         training_loader_tensor = torch.from_numpy(training_dataset).float()
-        training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True)
+        training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True, num_workers=16, persistent_workers=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
         train(EPOCHS=epochs, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
