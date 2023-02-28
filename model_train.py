@@ -6,7 +6,7 @@ Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 import json
 import numpy as np
 import torch
