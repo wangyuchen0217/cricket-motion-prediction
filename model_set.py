@@ -7,7 +7,7 @@ from tensorflow import keras
 import torch
 from torch import nn
 import math
-from torchsummary import summary
+# from torchsummary import summary
 
 '''lstm'''
 def create_lstm_model(node_number, 
@@ -145,10 +145,10 @@ def train(EPOCHS, model, training_loader, loss_fn, optimizer):
         train_one_epoch(model, training_loader, loss_fn, optimizer)
         epoch_number += 1
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = TransAm(feature_size=12,
-                                            target_size=3,
-                                            nhead=4,
-                                            num_layers=1,
-                                            dropout=0.1).to(device)
-print(model)
+# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# model = TransAm(feature_size=12,
+#                                             target_size=3,
+#                                             nhead=4,
+#                                             num_layers=1,
+#                                             dropout=0.1).to(device)
+# print(model)
