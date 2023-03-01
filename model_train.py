@@ -6,7 +6,7 @@ Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
 
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import json
 import numpy as np
 import torch
@@ -182,9 +182,10 @@ if __name__ == '__main__':
         history = model.fit(X_train, y_train[:,:,:output_num], epochs=epochs, batch_size=batch_size)
 
     elif model_type == "trans":
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = TransAm(feature_size=input_num,target_size=output_num,num_layers=1,dropout=0.1)
         training_dataset = np.concatenate((X_train, y_train), axis=2)
-        training_loader_tensor = torch.from_numpy(training_dataset).float()
+        training_loader_tensor = torch.from_numpy(training_dataset).float().to(device)
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, batch_size=32, shuffle=True, num_workers=16, persistent_workers=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
