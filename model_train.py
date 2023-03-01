@@ -4,7 +4,6 @@ Please manually input the parameters to "organize the time-slide window", "choos
 The trained models will be stored at /Model/, and the prediction csv. data will be stored at /Evaluation/Results/.
 Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
-
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import json
@@ -190,16 +189,16 @@ if __name__ == '__main__':
                                             num_layers=1,
                                             dropout=0.1).to(device)
         training_dataset = np.concatenate((X_train, y_train), axis=2)
-        training_loader_tensor = torch.from_numpy(training_dataset).float().to(device)
+        training_loader_tensor = torch.from_numpy(training_dataset).float()#.to(device)
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
-                                                                                                        batch_size=32, 
+                                                                                                        batch_size=32,
                                                                                                         shuffle=True, 
                                                                                                         num_workers=16, 
                                                                                                         pin_memory=True, 
                                                                                                         persistent_workers=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=epochs, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer)
+        train(EPOCHS=epochs, model=model, training_loader=training_loader, loss_fn=loss, optimizer=optimizer, device=device)
         
 
     # save the model

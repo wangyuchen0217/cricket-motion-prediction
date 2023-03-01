@@ -110,7 +110,7 @@ class TransAm(nn.Module):
         mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
         return mask
     
-def train_one_epoch(model, training_loader, loss_fn, optimizer):
+def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
     running_loss = 0.
     last_loss = 0.
     # Here, we use enumerate(training_loader) instead of
@@ -118,7 +118,9 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer):
     # index and do some intra-epoch reporting
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
-        inputs, labels = data[:,:,:-3], data[:,:,-3:]
+        # input, labels = data
+        inputs = data[:,:,:-3].to(device)
+        labels= data[:,:,-3:].to(device)
         # Zero your gradients for every batch!
         optimizer.zero_grad()
         # Make predictions for this batch
@@ -136,13 +138,13 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer):
             running_loss = 0.
     return last_loss
 
-def train(EPOCHS, model, training_loader, loss_fn, optimizer):
+def train(EPOCHS, model, training_loader, loss_fn, optimizer, device):
     epoch_number = 0
     for epoch in range(EPOCHS):
         print('EPOCH {}:'.format(epoch_number + 1))
         # Make sure gradient tracking is on, and do a pass over the data
         model.train(True)
-        train_one_epoch(model, training_loader, loss_fn, optimizer)
+        train_one_epoch(model, training_loader, loss_fn, optimizer, device)
         epoch_number += 1
 
 # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
