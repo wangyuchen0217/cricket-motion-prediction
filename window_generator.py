@@ -7,6 +7,7 @@ import json
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
+import torch
 
 def get_dataset(subject:str, out_content, input_pattern, fold_path):
     with open("trail_details.json", "r") as f:
@@ -61,9 +62,9 @@ def create_inout_sequences(X, y, window_size, time_step, out_mod, model_type):
             if model_type == ("lstm" or "hlstm"):
                 feature = X[i:i+window_size, :]
                 label = y[i+window_size, :].reshape(1,-1)
-            elif model_type == "trans":
-                feature = X[i:i+window_size,:]
-                label = y[i+time_step:i+window_size+time_step,:]
+            # elif model_type == "trans":
+            #     feature = X[i:i+window_size,:]
+            #     label = y[i+time_step:i+window_size+time_step,:]
         elif out_mod == "mul":
             if model_type == ("lstm" or "hlstm"):
                 feature = X[i:i+window_size, :]
@@ -80,3 +81,14 @@ def create_inout_sequences(X, y, window_size, time_step, out_mod, model_type):
     input = np.array(input)
     output = np.array(output)
     return input, output
+
+# class TimeSeriesDataset(torch.utils.data.Dataset):
+#     def __init__(self, X, y):
+#         self.X = X
+#         self.y = y
+
+#     def __len__(self):
+#         return len(self.X)
+
+#     def __getitem__(self, index):
+#         return self.X[index], self.y[index]

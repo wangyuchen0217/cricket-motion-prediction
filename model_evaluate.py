@@ -17,15 +17,15 @@ if __name__ == '__main__':
 
     fold_path = os.getcwd() 
     ###### organize the time-slide window ######
-    input_pattern = "pattern3" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
+    input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 1
+    time_step = 10
     ###### choose the output mode ###### 
     out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
-    out_content = "Direction" # ["Vel","Direction"]
+    out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16","c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "hlstm" # ["lstm","hlstm","arx","trans"]
+    model_type = "trans" # ["lstm","hlstm","arx","trans"]
 
     # generate the input_num of the sequence
     if input_pattern == "pattern1":
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         output_num =2
 
     # load the model
-    model_path = fold_path + "/Revise/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
+    model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
     if model_type == 'arx':
         class ARx(tf.keras.Model):
             def __init__(self, units, out_steps, input_num, output_num):
@@ -88,6 +88,8 @@ if __name__ == '__main__':
         ARx.call = call
         model.build(input_shape =(None, window_size,input_num))
         model.load_weights(model_path)
+    elif model_type == 'trans':
+        model = torch.load(model_path)
     else:
         model = tf.keras.models.load_model(model_path)
 
@@ -131,5 +133,5 @@ if __name__ == '__main__':
     evaluation.index = ["c16", "c17", "c18", "c19", "c20", "c21", "mean", "std"]
 
     # save the evaluation results
-    evaluation_path = fold_path + "/Revise/Evaluation/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".csv"
+    evaluation_path = fold_path + "/Evaluation/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".csv"
     evaluation.to_csv(path_or_buf=evaluation_path, header=True, index=True)

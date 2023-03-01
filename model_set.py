@@ -7,7 +7,7 @@ from tensorflow import keras
 import torch
 from torch import nn
 import math
-#from torchsummary import summary
+from torchsummary import summary
 
 '''lstm'''
 def create_lstm_model(node_number, 
@@ -59,7 +59,8 @@ def create_hlstm_model(node_number,
 '''transformer'''
 class PositionalEncoding(nn.Module):
 
-    def __init__(self, d_model, max_len=5000):
+    def __init__(self, d_model, max_len=100):
+    # max_len: the maximum length of the input sequence
         super(PositionalEncoding, self).__init__()       
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
@@ -75,19 +76,21 @@ class PositionalEncoding(nn.Module):
           
 
 class TransAm(nn.Module):
-    def __init__(self,feature_size,target_size,num_layers,dropout):
+    def __init__(self,feature_size,target_size,nhead, num_layers,dropout): 
+    # feature_size: the dimension of features (Must be an integer multiple of head)
+    # num_layers: the layers of Encoder_layer
         super(TransAm, self).__init__()
         self.model_type = 'Transformer'
         
         self.src_mask = None
         self.pos_encoder = PositionalEncoding(feature_size)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=4, dropout=dropout)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, dropout=dropout)
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=num_layers)        
         self.decoder = nn.Linear(feature_size,target_size)
         self.init_weights()
 
     def init_weights(self):
-        initrange = 0.1    
+        initrange = 0.1   
         self.decoder.bias.data.zero_()
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
@@ -98,7 +101,7 @@ class TransAm(nn.Module):
             self.src_mask = mask
 
         src = self.pos_encoder(src)
-        output = self.transformer_encoder(src,self.src_mask)#, self.src_mask)
+        output = self.transformer_encoder(src,self.src_mask)
         output = self.decoder(output)
         return output
 
@@ -115,7 +118,7 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer):
     # index and do some intra-epoch reporting
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
-        inputs, labels = data[:,:,:-3], data[:,:,-3:],
+        inputs, labels = data[:,:,:-3], data[:,:,-3:]
         # Zero your gradients for every batch!
         optimizer.zero_grad()
         # Make predictions for this batch
@@ -141,3 +144,11 @@ def train(EPOCHS, model, training_loader, loss_fn, optimizer):
         model.train(True)
         train_one_epoch(model, training_loader, loss_fn, optimizer)
         epoch_number += 1
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = TransAm(feature_size=12,
+                                            target_size=3,
+                                            nhead=4,
+                                            num_layers=1,
+                                            dropout=0.1).to(device)
+print(model)
