@@ -59,7 +59,7 @@ def create_hlstm_model(node_number,
 '''transformer'''
 class PositionalEncoding(nn.Module):
 
-    def __init__(self, d_model, max_len=100):
+    def __init__(self, d_model, max_len=150):
     # max_len: the maximum length of the input sequence
         super(PositionalEncoding, self).__init__()       
         pe = torch.zeros(max_len, d_model)
