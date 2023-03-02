@@ -73,16 +73,17 @@ def get_prediction_from_recursive(input, output_scaled,
 
 def get_prediction_from_transformer(input, output_scaled, 
                                                                                 model, time_step, 
-                                                                                window_size, output_num):
+                                                                                window_size, output_num, device):
     m = len(input) 
     n = len(output_scaled)
     remainder = (n-window_size) % time_step
     for i in range(0, m, time_step):
         X = input[i, :, :][np.newaxis]
+        X = torch.from_numpy(X).float().to(device)
         if i == 0:
-            Y_preds = model(torch.tensor(X).float()).detach().numpy()[:,-time_step:,:] # [:,-10:,:] for 10-step prediction
+            Y_preds = model(X).detach().cpu().numpy()[:,-time_step:,:] # [:,-10:,:] for 10-step prediction
         else:
-            y_pred = model(torch.tensor(X).float()).detach().numpy()[:,-time_step:,:] # pred.shape: (1, 10, out_num)
+            y_pred = model(X).detach().cpu().numpy()[:,-time_step:,:] # pred.shape: (1, 10, out_num)
             Y_preds = np.concatenate((Y_preds, y_pred),axis=1)
     if remainder != 0:
         remove = time_step - remainder
@@ -101,7 +102,8 @@ def get_results(X_test,
                                 cricket_number,
                                 out_content, 
                                 input_pattern,
-                                fold_path):
+                                fold_path,
+                                device):
     pred_test_scaled = None
     label_test_scaled = None
     if out_mod == "sgl":
@@ -124,7 +126,7 @@ def get_results(X_test,
         elif model_type == "trans":
             pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
                                                                                                                         model, time_step, 
-                                                                                                                        window_size, output_num)
+                                                                                                                        window_size, output_num, device)
             label_test_scaled = y_test_scaled[window_size:-time_step,:]
     # de-normalization
     pred_test = y_scaler.inverse_transform(pred_test_scaled)

@@ -222,4 +222,4 @@ if __name__ == '__main__':
         X_test = eval("X_test_" + cricket_number)
         y_test_scaled = eval("y_test_scaled_" + cricket_number)
         get_results(X_test, y_test_scaled, out_mod, model, y_scaler, model_type, 
-                                output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path)
+                                output_num, window_size, time_step, cricket_number, out_content, input_pattern, fold_path, device)
