@@ -6,8 +6,9 @@ import tensorflow as tf
 from tensorflow import keras
 import torch
 from torch import nn
+import numpy as np
 import math
-# from torchsummary import summary
+from torchsummary import summary
 
 '''lstm'''
 def create_lstm_model(node_number, 
@@ -59,7 +60,7 @@ def create_hlstm_model(node_number,
 '''transformer'''
 class PositionalEncoding(nn.Module):
 
-    def __init__(self, d_model, max_len=150):
+    def __init__(self, d_model, max_len=500):
     # max_len: the maximum length of the input sequence
         super(PositionalEncoding, self).__init__()       
         pe = torch.zeros(max_len, d_model)
@@ -73,6 +74,7 @@ class PositionalEncoding(nn.Module):
 
     def forward(self, x):
         return x + self.pe[:x.size(0), :]
+
           
 
 class TransAm(nn.Module):
@@ -147,10 +149,11 @@ def train(EPOCHS, model, training_loader, loss_fn, optimizer, device):
         train_one_epoch(model, training_loader, loss_fn, optimizer, device)
         epoch_number += 1
 
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# model = TransAm(feature_size=12,
-#                                             target_size=3,
-#                                             nhead=4,
-#                                             num_layers=1,
-#                                             dropout=0.1).to(device)
-# print(model)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = TransAm(feature_size=12,
+                                            target_size=3,
+                                            nhead=4,
+                                            num_layers=1,
+                                            dropout=0.1).to(device)
+#print(model)
+summary(model,input_size=(1,110,12))
