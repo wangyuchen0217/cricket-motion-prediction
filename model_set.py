@@ -6,9 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 import torch
 from torch import nn
-import numpy as np
 import math
-from torchsummary import summary
 
 '''lstm'''
 def create_lstm_model(node_number, 
@@ -86,7 +84,9 @@ class TransAm(nn.Module):
         
         self.src_mask = None
         self.pos_encoder = PositionalEncoding(feature_size)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, dropout=dropout)
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, 
+                                                                                                                dropout=dropout, batch_first=True) 
+        # the data shape is (batch_first, seq_len, feature_size) from the data loader, turn on batch_first
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=num_layers)        
         self.decoder = nn.Linear(feature_size,target_size)
         self.init_weights()
@@ -99,7 +99,8 @@ class TransAm(nn.Module):
     def forward(self,src):
         if self.src_mask is None or self.src_mask.size(0) != len(src):
             device = src.device
-            mask = self._generate_square_subsequent_mask(len(src)).to(device)
+            mask = self._generate_square_subsequent_mask(len(src[1])).to(device)
+            # mask use the length of the input sequence, so use len(src[1]) instead of len(src)
             self.src_mask = mask
 
         src = self.pos_encoder(src)
@@ -148,12 +149,3 @@ def train(EPOCHS, model, training_loader, loss_fn, optimizer, device):
         model.train(True)
         train_one_epoch(model, training_loader, loss_fn, optimizer, device)
         epoch_number += 1
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = TransAm(feature_size=12,
-                                            target_size=3,
-                                            nhead=4,
-                                            num_layers=1,
-                                            dropout=0.1).to(device)
-#print(model)
-summary(model,input_size=(1,110,12))
