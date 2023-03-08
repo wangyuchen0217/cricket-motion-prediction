@@ -44,29 +44,56 @@ class TransAm(nn.Module):
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
     def forward(self,src):
-        if self.src_mask is None or self.src_mask.size(0) != len(src):
+        if self.src_mask is None or self.src_mask.size(0) != src.size(1):
             device = src.device
-            mask = self._generate_square_subsequent_mask(len(src[1])).to(device)
+            # permute the dimensions to (sequence length, batch size, embedding dimension)
+            mask = self._generate_square_subsequent_mask(src.size(1)).to(device)
+            # mask use the length of the input sequence, so use len(src[1]) instead of len(src)
             self.src_mask = mask
 
-        src = self.pos_encoder(src)
+        print("input_src.shape:" + str(src.shape)) # (32, 110, 12)
+        src = self.pos_encoder(src.transpose(0,1)).transpose(0,1)
+        print("af_po_encode_src.shape:" + str(src.shape)) # (32, 110, 12)
         output = self.transformer_encoder(src,self.src_mask)
+        print("encoder_output.shape:" + str(output.shape)) # (32, 110, 12)
         output = self.decoder(output)
         return output
 
     def _generate_square_subsequent_mask(self, sz):
-        mask = (torch.triu(torch.ones(sz, sz)) == 1).transpose(0, 1)
+        mask = (torch.triu(torch.ones(sz, sz)) == 1)
         mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
         return mask
 
 encoder_layer = nn.TransformerEncoderLayer(d_model=12, nhead=4)
 transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=6)
 
-src = torch.rand(32, 110, 12)
+src = torch.rand(100, 110, 12) # 32: batch size, 110: sequence length, 12: feature size
+target = torch.rand(100, 110, 3) # 3: target size
+
+X_train = src.numpy()
+y_train = target.numpy()
+training_dataset = np.concatenate((X_train, y_train), axis=2)
+training_loader_tensor = torch.from_numpy(training_dataset).float()
+training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
+                                                                                                        batch_size=32,
+                                                                                                        shuffle=True, 
+                                                                                                        num_workers=16, 
+                                                                                                        pin_memory=True, 
+                                                                                                        persistent_workers=True,
+                                                                                                        drop_last=True)
 model = TransAm(feature_size=12,
                                             target_size=3,
                                             nhead=4,
                                             num_layers=1,
                                             dropout=0.1)
-out = model(src)
-print(out.shape)
+for i, data in enumerate(training_loader):
+        # Every data instance is an input + label pair
+        # input, labels = data
+        inputs = data[:, :, :-3]
+        labels = data[:, :, -3:]
+
+        out = model(inputs)
+        print("out.shape:" + str(out.shape)) # (32, 110, 3)
+        print("labels.shape:" + str(labels.shape)) # (32, 110, 3
+        loss_fn =torch.nn.MSELoss()
+        loss = loss_fn(out, labels)

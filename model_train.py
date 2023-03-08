@@ -195,7 +195,8 @@ if __name__ == '__main__':
                                                                                                         shuffle=True, 
                                                                                                         num_workers=16, 
                                                                                                         pin_memory=True, 
-                                                                                                        persistent_workers=True)
+                                                                                                        persistent_workers=True,
+                                                                                                        drop_last=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
         train(EPOCHS=epochs, model=model, 

@@ -57,7 +57,7 @@ def create_hlstm_model(node_number,
                 
 '''transformer'''
 class PositionalEncoding(nn.Module):
-
+# input and output shape: (sequence_length, batch_size, feature_size)
     def __init__(self, d_model, max_len=500):
     # max_len: the maximum length of the input sequence
         super(PositionalEncoding, self).__init__()       
@@ -73,7 +73,6 @@ class PositionalEncoding(nn.Module):
     def forward(self, x):
         return x + self.pe[:x.size(0), :]
 
-          
 
 class TransAm(nn.Module):
     def __init__(self,feature_size,target_size,nhead, num_layers,dropout): 
@@ -97,19 +96,20 @@ class TransAm(nn.Module):
         self.decoder.weight.data.uniform_(-initrange, initrange)
 
     def forward(self,src):
-        if self.src_mask is None or self.src_mask.size(0) != len(src):
+        if self.src_mask is None or self.src_mask.size(0) != src.size(1):
             device = src.device
-            mask = self._generate_square_subsequent_mask(len(src[1])).to(device)
-            # mask use the length of the input sequence, so use len(src[1]) instead of len(src)
+            mask = self._generate_square_subsequent_mask(src.size(1)).to(device)
             self.src_mask = mask
 
-        src = self.pos_encoder(src)
+        src = self.pos_encoder(src.transpose(0, 1)).transpose(0,1)
+        # change the input tensor of shape from (batch_size, sequence_length, feature_size) 
+        # to (sequence_length, batch_size, feature_size) 
         output = self.transformer_encoder(src,self.src_mask)
-        output = self.decoder(output)
+        output = self.decoder(output) #.transpose(0, 1)
         return output
 
     def _generate_square_subsequent_mask(self, sz):
-        mask = (torch.triu(torch.ones(sz, sz)) == 1).transpose(0, 1)
+        mask = (torch.triu(torch.ones(sz, sz)) == 1)#.transpose(0, 1)
         mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
         return mask
     
@@ -122,8 +122,8 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
         # input, labels = data
-        inputs = data[:,:,:-3].to(device)
-        labels= data[:,:,-3:].to(device)
+        inputs = data[:, :, :-3].to(device)
+        labels = data[:, :, -3:].to(device)
         # Zero your gradients for every batch!
         optimizer.zero_grad()
         # Make predictions for this batch
