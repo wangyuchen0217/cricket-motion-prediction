@@ -199,7 +199,7 @@ if __name__ == '__main__':
                                                                                                         drop_last=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=epochs, model=model, 
+        train(EPOCHS=1000, model=model, 
                     training_loader=training_loader, 
                     loss_fn=loss, optimizer=optimizer, 
                     device=device)
