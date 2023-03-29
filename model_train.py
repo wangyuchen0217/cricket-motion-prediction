@@ -188,8 +188,17 @@ if __name__ == '__main__':
                                             nhead=4,
                                             num_layers=6,
                                             dropout=0.1).to(device)
-        training_dataset = np.concatenate((X_train, y_train), axis=2)
-        training_loader_tensor = torch.from_numpy(training_dataset).float()
+        # training_dataset = np.concatenate((X_train, y_train), axis=2)
+        # print("training_dataset.shape: (%2d, %2d, %2d)" %(training_dataset.shape[0], training_dataset.shape[1], training_dataset.shape[2]))
+        # training_loader_tensor = torch.from_numpy(training_dataset).float()
+        # training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
+        #                                                                                                 batch_size=32,
+        #                                                                                                 shuffle=True, 
+        #                                                                                                 num_workers=16, 
+        #                                                                                                 pin_memory=True, 
+        #                                                                                                 persistent_workers=True,
+        #                                                                                                 drop_last=True)
+        training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
                                                                                                         batch_size=32,
                                                                                                         shuffle=True, 
@@ -199,7 +208,7 @@ if __name__ == '__main__':
                                                                                                         drop_last=True)
         loss =torch.nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=1000, model=model, 
+        train(EPOCHS=epochs, model=model, 
                     training_loader=training_loader, 
                     loss_fn=loss, optimizer=optimizer, 
                     device=device)

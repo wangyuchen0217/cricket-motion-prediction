@@ -122,8 +122,9 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
         # input, labels = data
-        inputs = data[:, :, :-3].to(device)
-        labels = data[:, :, -3:].to(device)
+        # inputs = data[:, :, :-3].to(device)
+        # labels = data[:, :, -3:].to(device)
+        inputs, labels = data.to(device)
         # Zero your gradients for every batch!
         optimizer.zero_grad()
         # Make predictions for this batch

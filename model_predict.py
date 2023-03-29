@@ -71,19 +71,38 @@ def get_prediction_from_recursive(input, output_scaled,
         Y_preds = Y_preds[:-remove,:]
     return Y_preds
 
+# def get_prediction_from_transformer(input, output_scaled, 
+#                                                                                 model, time_step, 
+#                                                                                 window_size, output_num, device):
+#     m = len(input) 
+#     n = len(output_scaled)
+#     remainder = (n-window_size) % time_step
+#     for i in range(0, m, time_step):
+#         X = input[i, :, :][np.newaxis]
+#         X = torch.from_numpy(X).float().to(device)
+#         if i == 0:
+#             Y_preds = model(X).detach().cpu().numpy()[:,-time_step:,:] # [:,-10:,:] for 10-step prediction
+#         else:
+#             y_pred = model(X).detach().cpu().numpy()[:,-time_step:,:] # pred.shape: (1, 10, out_num)
+#             Y_preds = np.concatenate((Y_preds, y_pred),axis=1)
+#     if remainder != 0:
+#         remove = time_step - remainder
+#         Y_preds = Y_preds[:,:-remove,:]
+#     return np.reshape(Y_preds,(-1,output_num))
+
 def get_prediction_from_transformer(input, output_scaled, 
                                                                                 model, time_step, 
                                                                                 window_size, output_num, device):
     m = len(input) 
     n = len(output_scaled)
-    remainder = (n-window_size) % time_step
+    remainder = (n-time_step-window_size) % time_step
     for i in range(0, m, time_step):
         X = input[i, :, :][np.newaxis]
         X = torch.from_numpy(X).float().to(device)
         if i == 0:
-            Y_preds = model(X).detach().cpu().numpy()[:,-time_step:,:] # [:,-10:,:] for 10-step prediction
+            Y_preds = model(X).detach().cpu().numpy()
         else:
-            y_pred = model(X).detach().cpu().numpy()[:,-time_step:,:] # pred.shape: (1, 10, out_num)
+            y_pred = model(X).detach().cpu().numpy()
             Y_preds = np.concatenate((Y_preds, y_pred),axis=1)
     if remainder != 0:
         remove = time_step - remainder
