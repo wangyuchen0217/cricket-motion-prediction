@@ -123,12 +123,25 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         # Every data instance is an input + label pair
         inputs, labels = data
         # Add padding token to the output labels
-        padding_token = [0, 0, 0] # choose any value for the padding token
-        padded_outputs = torch.nn.utils.rnn.pad_sequence([torch.tensor(seq) for seq in labels], 
-                                                                                                                        batch_first=True, 
-                                                                                                                        padding_value=padding_token)
+        padding_token =  torch.zeros(3) # choose any value for the padding token
+        max_input_seq_len = inputs.shape[1] 
+        padded_labels = torch.nn.utils.rnn.pad_sequence([torch.cat([seq, padding_token.repeat(max_input_seq_len - seq.shape[0], 1)]) for seq in labels], 
+                                                                                                                    batch_first=True)
         # Create a binary mask for the padded tokens
-        mask = torch.tensor(padded_outputs != padding_token, dtype=torch.float32)
+        mask = torch.tensor(padded_labels != padding_token, dtype=torch.float32)
+        # Slice the padded_labels to match the expected output shape
+        padded_labels = padded_labels[:, :max_input_seq_len, :]
+
+        # Verify the shapes match
+        assert padded_labels.shape == (inputs.shape[0] , max_input_seq_len, 3)
+        assert mask.shape == (inputs.shape[0] , max_input_seq_len, 3)
+        #print(mask.shape)
+        #print(padded_labels.shape)
+
+        # Move data to the device
+        inputs = inputs.to(device)
+        padded_labels = padded_labels.to(device)
+        mask = mask.to(device)
         # inputs = data[:, :, :-3].to(device)
         # labels = data[:, :, -3:].to(device)
         # Zero your gradients for every batch!
@@ -137,7 +150,8 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         outputs = model(inputs)
         # Compute the loss and its gradients
         #loss = loss_fn(outputs, labels)
-        loss = loss_fn(outputs*mask, labels*mask)
+        # Mask out the padded tokens
+        loss = loss_fn(outputs * mask, padded_labels * mask)
         loss.backward()
         # Adjust learning weights
         optimizer.step()

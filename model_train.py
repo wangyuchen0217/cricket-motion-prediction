@@ -198,13 +198,6 @@ if __name__ == '__main__':
         #                                                                                                 pin_memory=True, 
         #                                                                                                 persistent_workers=True,
         #                                                                                                 drop_last=True)
-        # Add padding token to the output labels
-        padding_token = [0, 0, 0] # choose any value for the padding token
-        padded_outputs = torch.nn.utils.rnn.pad_sequence([torch.tensor(seq) for seq in y_train], 
-                                                                                                                        batch_first=True, 
-                                                                                                                        padding_value=padding_token)
-        # Create a binary mask for the padded tokens
-        mask = torch.tensor(padded_outputs != padding_token, dtype=torch.float32)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
                                                                                                         batch_size=32,
