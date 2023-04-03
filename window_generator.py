@@ -73,9 +73,12 @@ def create_inout_sequences(X, y, window_size, time_step, out_mod, model_type):
                 feature = X[i:i+window_size, :]
                 label = np.hstack((y[i+window_size:i+window_size+time_step, :],
                                                     X[i+window_size:i+window_size+time_step, :]))
+            # elif model_type == "trans":
+            #     feature = np.vstack((X[i:i+window_size,:], np.zeros((time_step,width)))) 
+            #     label = y[i:i+window_size+time_step, :]
             elif model_type == "trans":
-                feature = np.vstack((X[i:i+window_size,:], np.zeros((time_step,width)))) 
-                label = y[i:i+window_size+time_step, :]
+                feature = X[i:i+window_size, :]
+                label = y[i+window_size:i+window_size+time_step, :] 
         input.append(feature)
         output.append(label)
     input = np.array(input)

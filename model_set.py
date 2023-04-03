@@ -121,15 +121,37 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
     # index and do some intra-epoch reporting
     for i, data in enumerate(training_loader):
         # Every data instance is an input + label pair
-        # input, labels = data
-        inputs = data[:, :, :-3].to(device)
-        labels = data[:, :, -3:].to(device)
+        inputs, labels = data
+        # Add padding token to the output labels
+        padding_token =  torch.zeros(3) # choose any value for the padding token
+        max_input_seq_len = inputs.shape[1] 
+        padded_labels = torch.nn.utils.rnn.pad_sequence([torch.cat([seq, padding_token.repeat(max_input_seq_len - seq.shape[0], 1)]) for seq in labels], 
+                                                                                                                    batch_first=True)
+        # Create a binary mask for the padded tokens
+        mask = torch.tensor(padded_labels != padding_token, dtype=torch.float32)
+        # Slice the padded_labels to match the expected output shape
+        padded_labels = padded_labels[:, :max_input_seq_len, :]
+
+        # Verify the shapes match
+        assert padded_labels.shape == (inputs.shape[0] , max_input_seq_len, 3)
+        assert mask.shape == (inputs.shape[0] , max_input_seq_len, 3)
+        #print(mask.shape)
+        #print(padded_labels.shape)
+
+        # Move data to the device
+        inputs = inputs.to(device)
+        padded_labels = padded_labels.to(device)
+        mask = mask.to(device)
+        # inputs = data[:, :, :-3].to(device)
+        # labels = data[:, :, -3:].to(device)
         # Zero your gradients for every batch!
         optimizer.zero_grad()
         # Make predictions for this batch
         outputs = model(inputs)
         # Compute the loss and its gradients
-        loss = loss_fn(outputs, labels)
+        #loss = loss_fn(outputs, labels)
+        # Mask out the padded tokens
+        loss = loss_fn(outputs * mask, padded_labels * mask)
         loss.backward()
         # Adjust learning weights
         optimizer.step()
