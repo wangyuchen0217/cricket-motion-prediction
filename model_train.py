@@ -186,7 +186,7 @@ if __name__ == '__main__':
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
                                             nhead=4,
-                                            num_layers=6,
+                                            num_layers=1,
                                             dropout=0.1).to(device)
         # training_dataset = np.concatenate((X_train, y_train), axis=2)
         # print("training_dataset.shape: (%2d, %2d, %2d)" %(training_dataset.shape[0], training_dataset.shape[1], training_dataset.shape[2]))
