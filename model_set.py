@@ -133,8 +133,8 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         padded_labels = padded_labels[:, :max_input_seq_len, :]
 
         # Verify the shapes match
-        assert padded_labels.shape == (inputs.shape[0] , max_input_seq_len, 3)
-        assert mask.shape == (inputs.shape[0] , max_input_seq_len, 3)
+        assert padded_labels.shape == (inputs.shape[0] , max_input_seq_len, labels.shape[2])
+        assert mask.shape == (inputs.shape[0] , max_input_seq_len, labels.shape[2])
         #print(mask.shape)
         #print(padded_labels.shape)
 
@@ -142,14 +142,12 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         inputs = inputs.to(device)
         padded_labels = padded_labels.to(device)
         mask = mask.to(device)
-        # inputs = data[:, :, :-3].to(device)
-        # labels = data[:, :, -3:].to(device)
+
         # Zero your gradients for every batch!
         optimizer.zero_grad()
         # Make predictions for this batch
         outputs = model(inputs)
         # Compute the loss and its gradients
-        #loss = loss_fn(outputs, labels)
         # Mask out the padded tokens
         loss = loss_fn(outputs * mask, padded_labels * mask)
         loss.backward()
