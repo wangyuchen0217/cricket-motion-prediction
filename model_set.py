@@ -75,7 +75,7 @@ class PositionalEncoding(nn.Module):
 
 
 class TransAm(nn.Module):
-    def __init__(self,feature_size,target_size,nhead, num_layers,dropout): 
+    def __init__(self,feature_size,target_size,nhead,hidden_size,num_layers,dropout): 
     # feature_size: the dimension of features (Must be an integer multiple of head)
     # num_layers: the layers of Encoder_layer
         super(TransAm, self).__init__()
@@ -83,7 +83,7 @@ class TransAm(nn.Module):
         
         self.src_mask = None
         self.pos_encoder = PositionalEncoding(feature_size)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, 
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, dim_feedforward=hidden_size,
                                                                                                                 dropout=dropout, batch_first=True) 
         # the data shape is (batch_first, seq_len, feature_size) from the data loader, turn on batch_first
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=num_layers)        
@@ -157,14 +157,14 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         running_loss += loss.item()
         if i % 1000 == 999:
             last_loss = running_loss / 1000 # loss per batch
-            print('  batch {} loss: {}'.format(i + 1, last_loss))
+            #print('  batch {} loss: {}'.format(i + 1, last_loss))
             running_loss = 0.
     return last_loss
 
 def train(EPOCHS, model, training_loader, loss_fn, optimizer, device):
     epoch_number = 0
     for epoch in range(EPOCHS):
-        print('EPOCH {}:'.format(epoch_number + 1))
+        #print('EPOCH {}:'.format(epoch_number + 1))
         # Make sure gradient tracking is on, and do a pass over the data
         model.train(True)
         train_one_epoch(model, training_loader, loss_fn, optimizer, device)

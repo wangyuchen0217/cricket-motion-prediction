@@ -1,5 +1,5 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "5"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 import json
 from window_generator import *
 from model_predict import *
@@ -9,14 +9,15 @@ from tensorflow import keras
 from sklearn.model_selection import KFold
 import optuna
 import warnings
+from model_set import *
 
 def get_R2(y_pred,y):
     R2_value = 1 - np.sum((y_pred - y)**2)/np.sum(y**2)
     return R2_value
 
 def objective(trial):
-    # inset the model type 
-    model_type = "hlstm" # ["lstm", "hlstm", "arx"]
+    # set the model type 
+    MODEL_TYPE = "trans" # ["lstm", "hlstm", "arx","trans"]
 
     #############################################################################
     # introduce the dataset
@@ -25,12 +26,12 @@ def objective(trial):
     INPUT_NUM = 12
     OUTPUT_NUM = 3
     WINDOW_SIZE = 100
-    if model_type == "lstm" or "hlstm":
+    if MODEL_TYPE == "lstm" or "hlstm":
+        OUT_MOD = "sgl"
         TIME_STEP = 1
-        OUT_MOD = "estimation"
-    elif model_type == "arx":
+    elif MODEL_TYPE == "arx" or "trans":
+        OUT_MOD = "mul"
         TIME_STEP = 10
-        OUT_MOD = "recursive"
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ds_train = np.zeros(shape=(1,INPUT_NUM+OUTPUT_NUM))
     for i in range(subjects):
@@ -41,7 +42,7 @@ def objective(trial):
             subject_number = str(i)
         # get dataset for train and test seperately
         # 1 test set for each cricket (c16, c17, c18, c19, c20, c21) 
-        with open("trail_details.json", "r") as f:
+        with open("/home/yuchen/Crickets_Walking_Motion_Prediction/trail_details.json", "r") as f:
             trail_details = json.load(f)
             cricket_number =  trail_details[f"T{subject_number}"]["cricket_number"]
             dataset_type =  trail_details[f"T{subject_number}"]["dataset_type"]
@@ -65,24 +66,32 @@ def objective(trial):
     print("y_train_scaled.shape: (%2d, %2d)" %(y_train_scaled.shape[0], y_train_scaled.shape[1]))
     print("")
     # create input and output sequence of train & test set
-    X_train, y_train = create_inout_sequences(X_train_scaled, y_train_scaled, WINDOW_SIZE, TIME_STEP, OUT_MOD) 
+    X_train, y_train = create_inout_sequences(X_train_scaled, y_train_scaled, WINDOW_SIZE, TIME_STEP, OUT_MOD, MODEL_TYPE) 
     print("X_train.shape: (%2d, %2d, %2d)" %(X_train.shape[0], X_train.shape[1], X_train.shape[2]))
     print("y_train.shape: (%2d, %2d, %2d)" %(y_train.shape[0], y_train.shape[1], y_train.shape[2]))
 
     #############################################################################
     # introduce the model
     keras.backend.clear_session() 
+    EPOCHS = 100     
     DROPOUT_RATIO = 0.5
     BATCHSIZE = 256
-    EPOCHS = 100
+
     # set which hyper parameters to search
+    # for common
+    learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+    # for lstm, hlstm, arx
     num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
     weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
     weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
-    learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+    # for trans
+    layer_num = trial.suggest_int("layer_num", 2, 12, log=True)
+    hidden_size = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
+    num_heads = trial.suggest_categorical("n_heads{}".format(i), [2, 3, 4, 6])
+    dropout_ratio = trial.suggest_float("dropout_ratio", 0.1, 0.5, log=True)
     
     #############################################################################
-    if model_type == "lstm":
+    if MODEL_TYPE == "lstm":
         # set LSTM model
         model = keras.Sequential()
         model.add(keras.layers.LSTM(num_hidden, 
@@ -100,7 +109,7 @@ def objective(trial):
             optimizer=keras.optimizers.Adam(learning_rate=learning_rate, clipvalue=0.5))
     
     #############################################################################
-    elif model_type == "hlstm":
+    elif MODEL_TYPE == "hlstm":
         # set HRNN model
         model = keras.Sequential()
         model.add(keras.layers.Dense(num_hidden, 
@@ -121,7 +130,7 @@ def objective(trial):
             optimizer=keras.optimizers.Adam(learning_rate=learning_rate, clipvalue=0.5))
     
     #############################################################################
-    elif model_type == "arx":
+    elif MODEL_TYPE == "arx":
         # set ARx model
         class ARx(tf.keras.Model):
             def __init__(self, num_hidden, TIME_STEP):
@@ -179,6 +188,30 @@ def objective(trial):
         model.compile(
             loss="mse",
             optimizer=keras.optimizers.Adam(learning_rate=learning_rate, clipvalue=0.5))
+
+    #############################################################################    
+    elif MODEL_TYPE == "trans":
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        model = TransAm(feature_size=INPUT_NUM,
+                                            target_size=OUTPUT_NUM,
+                                            nhead=num_heads,
+                                            hidden_size=hidden_size,
+                                            num_layers=layer_num,
+                                            dropout=dropout_ratio).to(device)
+        training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
+        training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
+                                                                                                        batch_size=32,
+                                                                                                        shuffle=True, 
+                                                                                                        num_workers=16, 
+                                                                                                        pin_memory=True, 
+                                                                                                        persistent_workers=True,
+                                                                                                        drop_last=True)
+        loss =torch.nn.MSELoss()
+        optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+        train(EPOCHS=EPOCHS, model=model, 
+                    training_loader=training_loader, 
+                    loss_fn=loss, optimizer=optimizer, 
+                    device=device)
     
     #############################################################################
     # cross-validation
@@ -193,7 +226,7 @@ def objective(trial):
                                                     X_train[test_index, :], 
                                                     y_train[train_index, :], 
                                                     y_train[test_index, :])
-        if model_type == "lstm" or "hlstm":
+        if MODEL_TYPE == "lstm" or "hlstm":
             model.fit(X_train_i,
                     y_train_i, 
                     shuffle=True,
@@ -203,7 +236,7 @@ def objective(trial):
             y_pred_i = model.predict(X_test_i)
             pp = y_pred_i.flatten('F')
             ll = y_test_i.flatten('F') 
-        elif model_type == "arx":
+        elif MODEL_TYPE == "arx":
             model.fit(X_train_i,
                     y_train_i[:,:,:OUTPUT_NUM], # ARx: y_train_i should add [:,:,:output_num] behind
                     shuffle=True,
@@ -228,7 +261,7 @@ if __name__ == "__main__":
         "Test before upgrading. "
         "REF:https://github.com/keras-team/keras/releases/tag/2.4.0"
     )
-    study = optuna.create_study(storage='sqlite:///db_hlstm.sqlite3', study_name='hlstm', direction="maximize")
+    study = optuna.create_study(storage='sqlite:///db_trans.sqlite3', study_name='4', direction="maximize")
     #study = optuna.study.load_study(study_name='arx',storage='sqlite:///arx.sqlite3')
     study.optimize(objective, n_trials=50, timeout=None)
 
