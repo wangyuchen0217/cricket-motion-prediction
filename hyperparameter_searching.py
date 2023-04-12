@@ -207,11 +207,7 @@ def objective(trial):
                                                                                                         persistent_workers=True,
                                                                                                         drop_last=True)
         loss =torch.nn.MSELoss()
-        optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        train(EPOCHS=EPOCHS, model=model, 
-                    training_loader=training_loader, 
-                    loss_fn=loss, optimizer=optimizer, 
-                    device=device)
+        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     
     #############################################################################
     # cross-validation
@@ -246,6 +242,16 @@ def objective(trial):
             y_pred_i = model.predict(X_test_i)
             pp = y_pred_i.flatten('F')
             ll = y_test_i[:,:,:OUTPUT_NUM].flatten('F') # ARx: y_test_i should add [:,:,:output_num] behind
+        elif MODEL_TYPE == "trans":
+            train(EPOCHS=EPOCHS, model=model, 
+                    training_loader=training_loader, 
+                    loss_fn=loss, optimizer=optimizer, 
+                    device=device)
+            y_pred_i = get_prediction_from_transformer(X_test_i, y_test_i, 
+                                                        model, TIME_STEP, 
+                                                        WINDOW_SIZE, OUTPUT_NUM, device)
+            pp = y_pred_i.flatten('F')
+            ll = y_test_i.flatten('F')
         score = get_R2(pp,ll)
         scores.append(score)
         accuracy = np.mean(scores)
