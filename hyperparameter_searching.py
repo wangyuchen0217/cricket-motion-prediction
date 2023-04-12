@@ -222,7 +222,7 @@ def objective(trial):
                                                     X_train[test_index, :], 
                                                     y_train[train_index, :], 
                                                     y_train[test_index, :])
-        if MODEL_TYPE == "lstm" or "hlstm":
+        if MODEL_TYPE == "lstm" or MODEL_TYPE == "hlstm":
             model.fit(X_train_i,
                     y_train_i, 
                     shuffle=True,
@@ -267,7 +267,7 @@ if __name__ == "__main__":
         "Test before upgrading. "
         "REF:https://github.com/keras-team/keras/releases/tag/2.4.0"
     )
-    study = optuna.create_study(storage='sqlite:///db_trans.sqlite3', study_name='trans', direction="maximize")
+    study = optuna.create_study(storage='sqlite:///db_trans.sqlite3', study_name='2', direction="maximize")
     #study = optuna.study.load_study(study_name='arx',storage='sqlite:///arx.sqlite3')
     study.optimize(objective, n_trials=50, timeout=None)
 
