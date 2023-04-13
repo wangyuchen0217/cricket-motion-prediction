@@ -86,7 +86,7 @@ def objective(trial):
     weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
     # for trans
     layer_num = trial.suggest_int("layer_num", 2, 12, log=True)
-    hidden_size = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
+    hidden_size = trial.suggest_int("ff_dim{}".format(i), 1024, 2048, log=True)
     num_heads = trial.suggest_categorical("n_heads{}".format(i), [2, 3, 4, 6])
     dropout_ratio = trial.suggest_float("dropout_ratio", 0.1, 0.5, log=True)
     
