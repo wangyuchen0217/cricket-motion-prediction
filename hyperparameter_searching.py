@@ -81,9 +81,9 @@ def objective(trial):
     # for common
     learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
     # for lstm, hlstm, arx
-    num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
-    weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
-    weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
+    # num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
+    # weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
+    # weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
     # for trans
     layer_num = trial.suggest_int("layer_num", 2, 12, log=True)
     hidden_size = trial.suggest_int("ff_dim{}".format(i), 1024, 2048, log=True)
