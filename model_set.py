@@ -157,14 +157,14 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         running_loss += loss.item()
         if i % 1000 == 999:
             last_loss = running_loss / 1000 # loss per batch
-            #print('  batch {} loss: {}'.format(i + 1, last_loss))
+            print('  batch {} loss: {}'.format(i + 1, last_loss))
             running_loss = 0.
     return last_loss
 
 def train(EPOCHS, model, training_loader, loss_fn, optimizer, device):
     epoch_number = 0
     for epoch in range(EPOCHS):
-        #print('EPOCH {}:'.format(epoch_number + 1))
+        print('EPOCH {}:'.format(epoch_number + 1))
         # Make sure gradient tracking is on, and do a pass over the data
         model.train(True)
         train_one_epoch(model, training_loader, loss_fn, optimizer, device)
