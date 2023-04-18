@@ -1,7 +1,7 @@
 .vscode/
 
 run.pid
-run_1.pid
+run_layer3.pid
 
 train.log
-train_1.log
+train_layer3.log
