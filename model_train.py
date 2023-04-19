@@ -187,7 +187,7 @@ if __name__ == '__main__':
                                             target_size=output_num,
                                             nhead=4,
                                             hidden_size=2048,
-                                            num_layers=7,
+                                            num_layers=8,
                                             dropout=0.1).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
