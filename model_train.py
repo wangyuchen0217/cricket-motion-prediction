@@ -185,7 +185,7 @@ if __name__ == '__main__':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
-                                            nhead=6,
+                                            nhead=2,
                                             hidden_size=2048,
                                             num_layers=7,
                                             dropout=0.1).to(device)
