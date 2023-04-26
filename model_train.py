@@ -185,8 +185,8 @@ if __name__ == '__main__':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
-                                            nhead=2,
-                                            hidden_size=2048,
+                                            nhead=4,
+                                            hidden_size=1024,
                                             num_layers=7,
                                             dropout=0.1).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())

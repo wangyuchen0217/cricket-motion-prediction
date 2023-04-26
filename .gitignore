@@ -1,7 +1,7 @@
 .vscode/
 
 run.pid
-run_ajust.pid
+run_1.pid
 
 train.log
-train_ajust.log
+train_1.log
