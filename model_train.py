@@ -186,7 +186,7 @@ if __name__ == '__main__':
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
                                             nhead=4,
-                                            hidden_size=1024,
+                                            hidden_size=1536,
                                             num_layers=7,
                                             dropout=0.1).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
