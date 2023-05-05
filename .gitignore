@@ -2,6 +2,8 @@
 
 run.pid
 run_1.pid
+run_2.pid
 
 train.log
 train_1.log
+train_2.log
