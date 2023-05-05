@@ -74,24 +74,15 @@ def objective(trial):
     # introduce the model
     keras.backend.clear_session() 
     EPOCHS = 100     
-    DROPOUT_RATIO = 0.5
-    BATCHSIZE = 256
-
-    # set which hyper parameters to search
-    # for common
-    learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
-    # for lstm, hlstm, arx
-    # num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
-    # weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
-    # weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
-    # for trans
-    layer_num = trial.suggest_int("layer_num", 2, 12, log=True)
-    hidden_size = trial.suggest_int("ff_dim{}".format(i), 1024, 2048, log=True)
-    num_heads = trial.suggest_categorical("n_heads{}".format(i), [2, 3, 4, 6])
-    dropout_ratio = trial.suggest_float("dropout_ratio", 0.1, 0.5, log=True)
     
     #############################################################################
     if MODEL_TYPE == "lstm":
+        DROPOUT_RATIO = 0.5
+        BATCHSIZE = 256
+        learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+        num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
+        weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
+        weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
         # set LSTM model
         model = keras.Sequential()
         model.add(keras.layers.LSTM(num_hidden, 
@@ -110,6 +101,12 @@ def objective(trial):
     
     #############################################################################
     elif MODEL_TYPE == "hlstm":
+        DROPOUT_RATIO = 0.5
+        BATCHSIZE = 256
+        learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+        num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
+        weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
+        weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
         # set HRNN model
         model = keras.Sequential()
         model.add(keras.layers.Dense(num_hidden, 
@@ -131,6 +128,12 @@ def objective(trial):
     
     #############################################################################
     elif MODEL_TYPE == "arx":
+        DROPOUT_RATIO = 0.5
+        BATCHSIZE = 256
+        learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+        num_hidden = trial.suggest_int("n_units{}".format(i), 4, 128, log=True)
+        weight_decay_lstm = trial.suggest_float("weight_decay_lstm", 1e-10, 1e-3, log=True)
+        weight_decay_dense = trial.suggest_float("weight_decay_dense", 1e-10, 1e-3, log=True)
         # set ARx model
         class ARx(tf.keras.Model):
             def __init__(self, num_hidden, TIME_STEP):
@@ -191,11 +194,14 @@ def objective(trial):
 
     #############################################################################    
     elif MODEL_TYPE == "trans":
+        learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-1, log=True)
+        layer_num = trial.suggest_int("layer_num", 5, 8, log=True)
+        dropout_ratio = trial.suggest_float("dropout_ratio", 0.1, 0.5, log=True)
+        # set the model
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = TransAm(feature_size=INPUT_NUM,
                                             target_size=OUTPUT_NUM,
-                                            nhead=num_heads,
-                                            hidden_size=hidden_size,
+                                            nhead=4,
                                             num_layers=layer_num,
                                             dropout=dropout_ratio).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
@@ -267,8 +273,8 @@ if __name__ == "__main__":
         "Test before upgrading. "
         "REF:https://github.com/keras-team/keras/releases/tag/2.4.0"
     )
-    #study = optuna.create_study(storage='sqlite:///db_trans.sqlite3', study_name='trans', direction="maximize")
-    study = optuna.study.load_study(study_name='trans',storage='sqlite:///db_trans.sqlite3')
+    study = optuna.create_study(storage='sqlite:///db_trans.sqlite3', study_name='trans', direction="maximize")
+    #study = optuna.study.load_study(study_name='trans',storage='sqlite:///db_trans.sqlite3')
     study.optimize(objective, n_trials=50, timeout=None)
 
     #fig = optuna.visualization.plot_intermediate_values(study)

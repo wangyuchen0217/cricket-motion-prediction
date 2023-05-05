@@ -75,7 +75,7 @@ class PositionalEncoding(nn.Module):
 
 
 class TransAm(nn.Module):
-    def __init__(self,feature_size,target_size,nhead,hidden_size,num_layers,dropout): 
+    def __init__(self,feature_size,target_size,nhead,num_layers,dropout): 
     # feature_size: the dimension of features (Must be an integer multiple of head)
     # num_layers: the layers of Encoder_layer
         super(TransAm, self).__init__()
@@ -83,8 +83,8 @@ class TransAm(nn.Module):
         
         self.src_mask = None
         self.pos_encoder = PositionalEncoding(feature_size)
-        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, dim_feedforward=hidden_size,
-                                                                                                                dropout=dropout, batch_first=True) 
+        self.encoder_layer = nn.TransformerEncoderLayer(d_model=feature_size, nhead=nhead, 
+                                                                            dropout=dropout, batch_first=True) 
         # the data shape is (batch_first, seq_len, feature_size) from the data loader, turn on batch_first
         self.transformer_encoder = nn.TransformerEncoder(self.encoder_layer, num_layers=num_layers)        
         self.decoder = nn.Linear(feature_size,target_size)
