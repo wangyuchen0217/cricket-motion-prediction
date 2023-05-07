@@ -5,7 +5,7 @@ The trained models will be stored at /Model/, and the prediction csv. data will 
 Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 import json
 import numpy as np
 import torch
@@ -186,7 +186,7 @@ if __name__ == '__main__':
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
                                             nhead=4,
-                                            num_layers=5,
+                                            num_layers=4,
                                             dropout=0.1).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
