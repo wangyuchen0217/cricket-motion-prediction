@@ -19,7 +19,7 @@ if __name__ == '__main__':
     ###### organize the time-slide window ######
     input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 30
+    time_step = 50
     ###### choose the output mode ###### 
     out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
     out_content = "Vel" # ["Vel","Direction"]
