@@ -111,7 +111,10 @@ def get_results(X_test,
             pred_test_scaled = get_prediction_from_estimation(X_test, model, output_num)
             label_test_scaled = y_test_scaled[window_size:,:]
         elif model_type == "trans":
-            pass
+            pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
+                                                                                                                        model, time_step, 
+                                                                                                                        window_size, output_num, device)
+            label_test_scaled = y_test_scaled[window_size:,:]
     elif out_mod == "mul":
         if model_type == ("lstm" or "hlstm"):
             pred_test_scaled = get_prediction_from_sequence(X_test, y_test_scaled, 

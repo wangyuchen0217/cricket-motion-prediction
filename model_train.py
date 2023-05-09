@@ -22,7 +22,7 @@ if __name__ == '__main__':
     window_size = 100
     time_step = 1
     ###### choose the test mode ###### 
-    out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
+    out_mod = "sgl" # ["sgl(single-step)","mul(multi-step)"]
     out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
