@@ -1,11 +1,13 @@
 .vscode/
 
 run.pid
+run_1.pid
 run_20.pid
 run_30.pid
 run_50.pid
 
 train.log
+train_1.log
 train_20.log
 train_30.log
 train_50.log

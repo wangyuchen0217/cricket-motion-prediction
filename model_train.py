@@ -20,7 +20,7 @@ if __name__ == '__main__':
     ###### organize the input and output sequence ######
     input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 50
+    time_step = 1
     ###### choose the test mode ###### 
     out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
     out_content = "Vel" # ["Vel","Direction"]
@@ -186,7 +186,7 @@ if __name__ == '__main__':
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
                                             nhead=4,
-                                            num_layers=3,
+                                            num_layers=7,
                                             dropout=0.1).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())
         training_loader = torch.utils.data.DataLoader(training_loader_tensor, 
