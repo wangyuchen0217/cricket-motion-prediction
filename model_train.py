@@ -5,7 +5,7 @@ The trained models will be stored at /Model/, and the prediction csv. data will 
 Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import json
 import numpy as np
 import torch
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     time_step = 1
     ###### choose the test mode ###### 
     out_mod = "sgl" # ["sgl(single-step)","mul(multi-step)"]
-    out_content = "Vel" # ["Vel","Direction"]
+    out_content = "Direction" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
     model_type = "trans" # ["lstm","hlstm","arx","trans"]
@@ -185,7 +185,7 @@ if __name__ == '__main__':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
-                                            nhead=12,
+                                            nhead=4,
                                             num_layers=3,
                                             dropout=0.1).to(device)
         training_loader_tensor = torch.utils.data.TensorDataset(torch.from_numpy(X_train).float(), torch.from_numpy(y_train).float())

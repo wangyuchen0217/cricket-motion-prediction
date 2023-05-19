@@ -123,7 +123,8 @@ def train_one_epoch(model, training_loader, loss_fn, optimizer, device):
         # Every data instance is an input + label pair
         inputs, labels = data
         # Add padding token to the output labels
-        padding_token =  torch.zeros(3) # choose any value for the padding token
+        # len(labels[0,0,:])-> the number of output features
+        padding_token =  torch.zeros(len(labels[0,0,:])) # choose any value for the padding token
         max_input_seq_len = inputs.shape[1] 
         padded_labels = torch.nn.utils.rnn.pad_sequence([torch.cat([seq, padding_token.repeat(max_input_seq_len - seq.shape[0], 1)]) for seq in labels], 
                                                                                                                     batch_first=True)
