@@ -19,7 +19,7 @@ if __name__ == '__main__':
     ###### organize the time-slide window ######
     input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 20
+    time_step = 10
     ###### choose the output mode ###### 
     out_content = "Direction" # ["Vel","Direction"]
     test_trails = ["c16","c17","c18","c19","c20","c21"]
