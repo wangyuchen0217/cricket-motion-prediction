@@ -5,7 +5,7 @@ The trained models will be stored at /Model/, and the prediction csv. data will 
 Naming convention is "model_windowsize_timestep_(cricketnumber_)outcontent".
 '''
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 import json
 import numpy as np
 import torch
@@ -20,19 +20,19 @@ if __name__ == '__main__':
     ###### organize the input and output sequence ######
     input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 30
+    time_step = 1
     ###### choose the test mode ###### 
-    out_mod = "mul" # ["sgl(single-step)","mul(multi-step)"]
-    out_content = "Direction" # ["Vel","Direction"]
+    out_mod = "sgl" # ["sgl(single-step)","mul(multi-step)"]
+    out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "trans" # ["lstm","hlstm","arx","trans"]
+    model_type = "arx" # ["lstm","hlstm","arx","trans"]
     node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256
     epochs = 100
     loss = "mse"
-    learning_rate=3.97e-4 # ["lstm:1.06e-3","hlstm:3.97e-4","arx:100"]
+    learning_rate=6.61e-4 # ["lstm:1.06e-3","hlstm:3.97e-4","arx:6.61e-4"]
     optimizer=keras.optimizers.Adam(learning_rate=learning_rate, clipvalue=0.5)
 
     # generate the input_num of the sequence
@@ -143,7 +143,7 @@ if __name__ == '__main__':
                 self.dropout = tf.keras.layers.Dropout(rate=0.5)
                 self.dense = tf.keras.layers.Dense(input_num+output_num,
                                                 kernel_regularizer=tf.keras.regularizers.l2(l=0.001))
-        model = ARx(units=100, out_steps=10, input_num=12, output_num=3)    
+        model = ARx(units=node_number, out_steps=time_step, input_num=input_num, output_num=output_num)    
         
         def warmup(self, inputs):
             # inputs.shape => (batch, time, features)

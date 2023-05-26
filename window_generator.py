@@ -62,6 +62,10 @@ def create_inout_sequences(X, y, window_size, time_step, out_mod, model_type):
             if model_type == ("lstm" or "hlstm"):
                 feature = X[i:i+window_size, :]
                 label = y[i+window_size, :].reshape(1,-1)
+            elif model_type == "arx":
+                feature = X[i:i+window_size, :]
+                label = np.hstack((y[i+window_size, :].reshape(1,-1),
+                                                    X[i+window_size, :].reshape(1,-1)))
             elif model_type == "trans":
                 feature = X[i:i+window_size,:]
                 label = y[i+window_size, :].reshape(1,-1)
