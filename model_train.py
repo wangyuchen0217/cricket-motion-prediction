@@ -23,7 +23,7 @@ if __name__ == '__main__':
     time_step = 1
     ###### choose the test mode ###### 
     out_mod = "sgl" # ["sgl(single-step)","mul(multi-step)"]
-    out_content = "Vel" # ["Vel","Direction"]
+    out_content = "Direction" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
