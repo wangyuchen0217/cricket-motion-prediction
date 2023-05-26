@@ -110,6 +110,12 @@ def get_results(X_test,
         if model_type == ("lstm" or "hlstm"):
             pred_test_scaled = get_prediction_from_estimation(X_test, model, output_num)
             label_test_scaled = y_test_scaled[window_size:,:]
+        elif model_type == "arx":
+            pred_test_scaled = get_prediction_from_recursive(X_test, y_test_scaled, 
+                                                                                                                        model, time_step, 
+                                                                                                                        window_size)
+            pred_test_scaled = np.reshape(pred_test_scaled,(-1,output_num))
+            label_test_scaled = y_test_scaled[window_size:,:]
         elif model_type == "trans":
             pred_test_scaled = get_prediction_from_transformer(X_test, y_test_scaled, 
                                                                                                                         model, time_step, 

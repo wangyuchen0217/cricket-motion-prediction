@@ -19,12 +19,12 @@ if __name__ == '__main__':
     ###### organize the time-slide window ######
     input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 10
+    time_step = 1
     ###### choose the output mode ###### 
-    out_content = "Direction" # ["Vel","Direction"]
+    out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16","c17","c18","c19","c20","c21"]
     ###### set the model ######
-    model_type = "trans" # ["lstm","hlstm","arx","trans"]
+    model_type = "arx" # ["lstm","hlstm","arx","trans"]
 
     # generate the input_num of the sequence
     if input_pattern == "pattern1":

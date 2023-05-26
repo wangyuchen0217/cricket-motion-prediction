@@ -26,6 +26,7 @@ if __name__ == '__main__':
     out_content = "Vel" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_type = "arx" # ["lstm","hlstm","arx","trans"]
     node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
@@ -182,7 +183,6 @@ if __name__ == '__main__':
         history = model.fit(X_train, y_train[:,:,:output_num], epochs=epochs, batch_size=batch_size)
 
     elif model_type == "trans":
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         model = TransAm(feature_size=input_num,
                                             target_size=output_num,
                                             nhead=4,
@@ -214,7 +214,12 @@ if __name__ == '__main__':
         model.save(model_path) 
 
     # model_path = fold_path + "/Model/" + model_type + "_" + str(window_size) + "_" + str(time_step) + "_" + out_content + "_" + input_pattern + ".h5" 
-    # model = torch.load(model_path)
+    # if model_type == "arx":
+    #     model.load_weights(model_path)
+    # elif model_type == "trans":
+    #     model = torch.load(model_path)
+    # else:
+    #     model = tf.keras.models.load_model(model_path)
 
     # get results
     for i in range (6):
