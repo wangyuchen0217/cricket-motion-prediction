@@ -63,7 +63,7 @@ if __name__ == '__main__':
             subject_number = str(i)
         # get dataset for train and test seperately
         # 1 test set for each cricket (c16, c17, c18, c19, c20, c21) 
-        with open("/home/yuchen/Crickets_Walking_Motion_Prediction/trail_details.json", "r") as f:  
+        with open(fold_path+"/trail_details.json", "r") as f:  
             trail_details = json.load(f)
             cricket_number =  trail_details[f"T{subject_number}"]["cricket_number"]
             video_number = trail_details[f"T{subject_number}"]["video_number"]
