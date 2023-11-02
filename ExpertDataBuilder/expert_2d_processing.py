@@ -91,9 +91,12 @@ def fix_exceed_180(data):
     for i in range(len(data)):
         if data[i] >= 180:
             fixed_data_i = - (360 - data[i])
+            fixed_data.append(fixed_data_i)
         elif data[i] <= -180:
             fixed_data_i = 360 + data[i]
-        fixed_data.append(fixed_data_i)
+            fixed_data.append(fixed_data_i)
+        else:
+            fixed_data.append(data[i])
     return fixed_data
 
 def get_joint_movement(df_skeleton):
