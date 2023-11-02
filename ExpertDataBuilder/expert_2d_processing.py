@@ -114,10 +114,11 @@ def get_joint_movement(df_skeleton):
     FTi_RF = RF12 - inital_pos_right
     FTi_RM = RM12 - inital_pos_right
     FTi_RH = RH12 - inital_pos_right
-    joint_movement = np.hstack((ThC_LF, ThC_LM, ThC_LH, ThC_RF, ThC_RM, ThC_RH, \
-                            FTi_LF, FTi_LM, FTi_LH, FTi_RF, FTi_RM, FTi_RH))
-    df_joint_movement = pd.DataFrame(data=joint_movement, columns=['ThC_LF', 'ThC_LM', 'ThC_LH', 'ThC_RF', 'ThC_RM', 'ThC_RH', \
-                                                            'FTi_LF', 'FTi_LM', 'FTi_LH', 'FTi_RF', 'FTi_RM', 'FTi_RH'])
+    joint_movement = np.hstack((inital_pos_left, ThC_LF, ThC_LM, ThC_LH, ThC_RF, ThC_RM, ThC_RH,
+                            inital_pos_right, FTi_LF, FTi_LM, FTi_LH, FTi_RF, FTi_RM, FTi_RH))
+    df_joint_movement = pd.DataFrame(data=joint_movement, columns=['inital_pos_left', 'ThC_LF', 'ThC_LM', 'ThC_LH', 
+                                                                   'ThC_RF', 'ThC_RM', 'ThC_RH', 'inital_pos_right', 'FTi_LF', 'FTi_LM', 'FTi_LH', 
+                                                                   'FTi_RF', 'FTi_RM', 'FTi_RH'])
     return df_joint_movement
 
 def save_joint_movement(subject:str, fold_path):
