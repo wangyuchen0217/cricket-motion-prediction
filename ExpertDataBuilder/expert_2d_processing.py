@@ -118,9 +118,10 @@ def get_joint_movement(df_skeleton):
     FTi_LM = LM12 - inital_pos_left; FTi_RM = RM12 - inital_pos_right
     FTi_LH = LH12 - inital_pos_left; FTi_RH = RH12 - inital_pos_right
     # fix the joint movement that exceed plus/minus 180 deg
-    ThC_LF = fix_exceed_180(ThC_LF); ThC_RF = fix_exceed_180(ThC_RF)
-    ThC_LM = fix_exceed_180(ThC_LM); ThC_RM = fix_exceed_180(ThC_RM)
-    ThC_LH = fix_exceed_180(ThC_LH); ThC_RH = fix_exceed_180(ThC_RH)
+    ThC_LF = fix_exceed_180(ThC_LF); ThC_LM = fix_exceed_180(ThC_LM); ThC_LH = fix_exceed_180(ThC_LH)
+    ThC_RF = fix_exceed_180(ThC_RF); ThC_RM = fix_exceed_180(ThC_RM); ThC_RH = fix_exceed_180(ThC_RH)
+    FTi_LF = fix_exceed_180(FTi_LF); FTi_LM = fix_exceed_180(FTi_LM); FTi_LH = fix_exceed_180(FTi_LH)
+    FTi_RF = fix_exceed_180(FTi_RF); FTi_RM = fix_exceed_180(FTi_RM); FTi_RH = fix_exceed_180(FTi_RH)
     joint_movement = np.hstack((ThC_LF, ThC_LM, ThC_LH, ThC_RF, ThC_RM, ThC_RH,
                                 FTi_LF, FTi_LM, FTi_LH, FTi_RF, FTi_RM, FTi_RH))
     df_joint_movement = pd.DataFrame(data=joint_movement, columns=['ThC_LF', 'ThC_LM', 'ThC_LH', 'ThC_RF', 'ThC_RM', 
