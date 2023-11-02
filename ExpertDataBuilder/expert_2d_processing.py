@@ -86,6 +86,16 @@ def get_reverse_orientation(data):
         reversed_data.append(reversed_data_i)
     return reversed_data
 
+def fix_exceed_180(data):
+    fixed_data = []
+    for i in range(len(data)):
+        if data[i] >= 180:
+            fixed_data_i = - (360 - data[i])
+        elif data[i] <= -180:
+            fixed_data_i = 360 + data[i]
+        fixed_data.append(fixed_data_i)
+    return fixed_data
+
 def get_joint_movement(df_skeleton):
     skeleton = df_skeleton.to_numpy()
     inital_pos_left, inital_pos_right = get_inital_pos(df_skeleton)
@@ -94,31 +104,24 @@ def get_joint_movement(df_skeleton):
     LF12, LM12, LH12, RF12, RM12, RH12 = skeleton[:,7].reshape(-1,1), skeleton[:,8].reshape(-1,1), skeleton[:,9].reshape(-1,1),\
                                                                                     skeleton[:,10].reshape(-1,1), skeleton[:,11].reshape(-1,1), skeleton[:,12].reshape(-1,1)
     # reverse 180 deg for the femur orientation
-    LF01 = get_reverse_orientation(LF10)
-    LM01 = get_reverse_orientation(LM10)
-    LH01 = get_reverse_orientation(LH10)
-    RF01 = get_reverse_orientation(RF10)
-    RM01 = get_reverse_orientation(RM10)
-    RH01 = get_reverse_orientation(RH10)
+    LF01 = get_reverse_orientation(LF10); LM01 = get_reverse_orientation(LM10); LH01 = get_reverse_orientation(LH10)
+    RF01 = get_reverse_orientation(RF10); RM01 = get_reverse_orientation(RM10); RH01 = get_reverse_orientation(RH10)
     # calculate the ThC joint movement
-    ThC_LF = LF01 - inital_pos_left
-    ThC_LM = LM01 - inital_pos_left
-    ThC_LH = LH01 - inital_pos_left
-    ThC_RF = RF01 - inital_pos_right
-    ThC_RM = RM01 - inital_pos_right
-    ThC_RH = RH01 - inital_pos_right
+    ThC_LF = LF01 - inital_pos_left; ThC_RF = RF01 - inital_pos_right
+    ThC_LM = LM01 - inital_pos_left; ThC_RM = RM01 - inital_pos_right
+    ThC_LH = LH01 - inital_pos_left; ThC_RH = RH01 - inital_pos_right
     # calculate the FTi joint movement
-    FTi_LF = LF12 - inital_pos_left
-    FTi_LM = LM12 - inital_pos_left
-    FTi_LH = LH12 - inital_pos_left
-    FTi_RF = RF12 - inital_pos_right
-    FTi_RM = RM12 - inital_pos_right
-    FTi_RH = RH12 - inital_pos_right
-    joint_movement = np.hstack((inital_pos_left, ThC_LF, ThC_LM, ThC_LH, ThC_RF, ThC_RM, ThC_RH,
-                            inital_pos_right, FTi_LF, FTi_LM, FTi_LH, FTi_RF, FTi_RM, FTi_RH))
-    df_joint_movement = pd.DataFrame(data=joint_movement, columns=['inital_pos_left', 'ThC_LF', 'ThC_LM', 'ThC_LH', 
-                                                                   'ThC_RF', 'ThC_RM', 'ThC_RH', 'inital_pos_right', 'FTi_LF', 'FTi_LM', 'FTi_LH', 
-                                                                   'FTi_RF', 'FTi_RM', 'FTi_RH'])
+    FTi_LF = LF12 - inital_pos_left; FTi_RF = RF12 - inital_pos_right
+    FTi_LM = LM12 - inital_pos_left; FTi_RM = RM12 - inital_pos_right
+    FTi_LH = LH12 - inital_pos_left; FTi_RH = RH12 - inital_pos_right
+    # fix the joint movement that exceed plus/minus 180 deg
+    ThC_LF = fix_exceed_180(ThC_LF); ThC_RF = fix_exceed_180(ThC_RF)
+    ThC_LM = fix_exceed_180(ThC_LM); ThC_RM = fix_exceed_180(ThC_RM)
+    ThC_LH = fix_exceed_180(ThC_LH); ThC_RH = fix_exceed_180(ThC_RH)
+    joint_movement = np.hstack((ThC_LF, ThC_LM, ThC_LH, ThC_RF, ThC_RM, ThC_RH,
+                                FTi_LF, FTi_LM, FTi_LH, FTi_RF, FTi_RM, FTi_RH))
+    df_joint_movement = pd.DataFrame(data=joint_movement, columns=['ThC_LF', 'ThC_LM', 'ThC_LH', 'ThC_RF', 'ThC_RM', 
+                                                                   'ThC_RH', 'FTi_LF', 'FTi_LM', 'FTi_LH', 'FTi_RF', 'FTi_RM', 'FTi_RH'])
     return df_joint_movement
 
 def save_joint_movement(subject:str, fold_path):
