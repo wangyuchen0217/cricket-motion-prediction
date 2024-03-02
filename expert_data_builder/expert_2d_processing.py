@@ -144,6 +144,23 @@ def save_joint_movement(subject:str, fold_path):
     joint_movement_path = fold_path + '/expert_data_builder/joint_movement/' + cricket_number + '/PIC' + video_number + '_Joint_movement.csv'
     df_joint_movement.to_csv(path_or_buf = joint_movement_path, header=True, index=True)
 
+'''
+The following function is to set the heading direction 
+(from counterclockwise to clockwise).
+'''
+def get_heading_direction(subject:str, fold_path):
+    with open("trail_details.json", "r") as f:
+        trail_details = json.load(f)
+        cricket_number =  trail_details[f"T{subject}"]["cricket_number"]
+        video_number = trail_details[f"T{subject}"]["video_number"]
+    direction_path = fold_path + '/DataPreparation/Preprocessed_data/' + cricket_number + '/' + video_number + '_ThetaCamBody_Crop.csv'
+    direction = pd.read_csv(direction_path, header=0, usecols=[0]).to_numpy()
+    # revise the data from counterclockwise to clockwise
+    direction = 360 - direction
+    # save the heading direction
+    save_direction_path = fold_path + '/expert_data_builder/joint_movement/' + cricket_number + '/PIC' + video_number + '_Heading_direction.csv'
+    pd.DataFrame(data=direction, columns=['Heading_direction']).to_csv(path_or_buf = save_direction_path, header=True, index=True)
+
 if __name__ == '__main__':
     # return to the root fold path
     fold_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -164,3 +181,4 @@ if __name__ == '__main__':
         else:
             save_original_skeleton_data(subject_number, fold_path)
             save_joint_movement(subject_number, fold_path)
+            get_heading_direction(subject_number, fold_path)
