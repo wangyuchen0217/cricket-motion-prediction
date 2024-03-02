@@ -1,5 +1,7 @@
 .vscode/
 
+DeepLabCut/
+
 run.pid
 run_1.pid
 run_10.pid
