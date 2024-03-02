@@ -100,7 +100,7 @@ def fix_exceed_180(data):
             fixed_data.append(data[i])
     return fixed_data
 
-def get_joint_movement(df_skeleton):
+def get_joint_movement(subject:str, df_skeleton):
     skeleton = df_skeleton.to_numpy()
     inital_pos_left, inital_pos_right = get_inital_pos(df_skeleton)
     LF10, LM10, LH10, RF10, RM10, RH10 = skeleton[:,1].reshape(-1,1), skeleton[:,2].reshape(-1,1), skeleton[:,3].reshape(-1,1),\
@@ -125,13 +125,18 @@ def get_joint_movement(df_skeleton):
     FTi_RF = fix_exceed_180(FTi_RF); FTi_RM = fix_exceed_180(FTi_RM); FTi_RH = fix_exceed_180(FTi_RH)
     joint_movement = np.hstack((ThC_LF, ThC_LM, ThC_LH, ThC_RF, ThC_RM, ThC_RH,
                                 FTi_LF, FTi_LM, FTi_LH, FTi_RF, FTi_RM, FTi_RH))
+    # crop the joint movement data to synchronize with the velocity data
+    with open("trail_details.json", "r") as f:
+        trail_details = json.load(f)
+        [begin, end] = trail_details[f"T{subject}"]["video_synchronize_range"]
+        joint_movement = joint_movement[begin:-end,:]
     df_joint_movement = pd.DataFrame(data=joint_movement, columns=['ThC_LF', 'ThC_LM', 'ThC_LH', 'ThC_RF', 'ThC_RM', 
                                                                    'ThC_RH', 'FTi_LF', 'FTi_LM', 'FTi_LH', 'FTi_RF', 'FTi_RM', 'FTi_RH'])
     return df_joint_movement
 
 def save_joint_movement(subject:str, fold_path):
     df_skeleton = get_df_original_skeleton_data(subject, fold_path)
-    df_joint_movement = get_joint_movement(df_skeleton)
+    df_joint_movement = get_joint_movement(subject, df_skeleton)
     with open("trail_details.json", "r") as f:
         trail_details = json.load(f)
         cricket_number =  trail_details[f"T{subject}"]["cricket_number"]
@@ -150,9 +155,12 @@ if __name__ == '__main__':
             subject_number = "0" + str(i)
         else:
             subject_number = str(i)
-        # with open("trail_details.json", "r") as f:
-        # trail_details = json.load(f)
-        # cricket_number =  trail_details[f"T{subject}"]["cricket_number"]
-
-        save_original_skeleton_data(subject_number, fold_path)
-        save_joint_movement(subject_number, fold_path)
+        # skip c16,c18,c20 
+        with open("trail_details.json", "r") as f:
+            config = json.load(f)
+            c_number =  config[f"T{subject_number}"]["cricket_number"]
+        if c_number in ['c16', 'c18', 'c20']:
+            continue
+        else:
+            save_original_skeleton_data(subject_number, fold_path)
+            save_joint_movement(subject_number, fold_path)
