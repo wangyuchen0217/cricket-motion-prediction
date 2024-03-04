@@ -179,11 +179,13 @@ def get_trajectory(subject:str, fold_path):
     traj_x = [0]; x=0
     traj_y = [0]; y=0
     for i in range(1, len(vel)):
-        x = x + vel[i][0]*1/119.88/1000
-        y = y + vel[i][1]*1/119.88/1000
+        x = x + vel[i][0]*1/119.88/1000 # mm to m
+        y = y + vel[i][1]*1/119.88/1000 # mm to m
         traj_x.append(x)
         traj_y.append(y)
-    traj = np.array([traj_x, traj_y]).reshape(-1, 2)
+    traj_x = np.array(traj_x).reshape(-1,1)
+    traj_y = np.array(traj_y).reshape(-1,1)
+    traj = np.hstack((traj_x, traj_y))
     # save the trajectory
     save_traj_path = fold_path + '/expert_data_builder/movement/' + cricket_number + '/PIC' + video_number + '_Trajectory.csv'
     pd.DataFrame(data=traj, columns=['x', 'y']).to_csv(path_or_buf = save_traj_path, header=True, index=True)
