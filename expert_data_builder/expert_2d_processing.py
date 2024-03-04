@@ -161,6 +161,33 @@ def get_heading_direction(subject:str, fold_path):
     save_direction_path = fold_path + '/expert_data_builder/movement/' + cricket_number + '/PIC' + video_number + '_Heading_direction.csv'
     pd.DataFrame(data=direction, columns=['Heading_direction']).to_csv(path_or_buf = save_direction_path, header=True, index=True)
 
+'''
+The following function is to calculate the trajectory of the cricket.
+(from counterclockwise to clockwise).
+'''
+def get_trajectory(subject:str, fold_path):
+    with open("trail_details.json", "r") as f:
+        trail_details = json.load(f)
+        cricket_number =  trail_details[f"T{subject}"]["cricket_number"]
+        video_number = trail_details[f"T{subject}"]["video_number"]
+    vel_path = fold_path + '/DataPreparation/Preprocessed_data/' + cricket_number + '/' + video_number + '_Velocity_Smooth.csv'
+    vel = pd.read_csv(vel_path, header=None, usecols=[1,2]).to_numpy() # vel.x and vel.y
+    # scale velocity: mm/s
+    vel = vel * 0.224077
+    # frequency: 119.88(120)Hz
+    # trajectory calculation
+    traj_x = [0]; x=0
+    traj_y = [0]; y=0
+    for i in range(1, len(vel)):
+        x = x + vel[i][0]*1/119.88/1000
+        y = y + vel[i][1]*1/119.88/1000
+        traj_x.append(x)
+        traj_y.append(y)
+    traj = np.array([traj_x, traj_y]).reshape(-1, 2)
+    # save the trajectory
+    save_traj_path = fold_path + '/expert_data_builder/movement/' + cricket_number + '/PIC' + video_number + '_Trajectory.csv'
+    pd.DataFrame(data=traj, columns=['x', 'y']).to_csv(path_or_buf = save_traj_path, header=True, index=True)
+
 if __name__ == '__main__':
     # return to the root fold path
     fold_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -182,3 +209,4 @@ if __name__ == '__main__':
             save_original_skeleton_data(subject_number, fold_path)
             save_joint_movement(subject_number, fold_path)
             get_heading_direction(subject_number, fold_path)
+            get_trajectory(subject_number, fold_path)
