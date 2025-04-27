@@ -2,17 +2,6 @@
 
 This project focuses on predicting the locomotion direction and velocity of crickets based on joint angle sequences extracted from walking videos. Deep learning models, including LSTM and Transformer architectures, are employed to capture the temporal dynamics of gait patterns.
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Dataset](#dataset)
-- [Methods](#methods)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Results](#results)
-- [Project Structure](#project-structure)
-- [Dependencies](#dependencies)
-- [License](#license)
-- [Contact](#contact)
 
 ## Introduction
 
