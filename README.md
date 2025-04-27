@@ -4,7 +4,8 @@ This project focuses on predicting the locomotion direction and velocity of cric
 
 Parts of this work have been presented at: 
 - **MHS  2021 (32nd 2021 International Symposium on Micro-NanoMechatronics and Human Science)** 
-- **IROS 2022 (2022 IEEE/RSJ International Conference on Intelligent Robots and Systems)**.  
+- **IROS 2022 (2022 IEEE/RSJ International Conference on Intelligent Robots and Systems)**
+
 Related journal publications are available:
 - [Prediction of Whole-Body Velocity and Direction From Local Leg Joint Movements in Insect Walking via LSTM Neural Networks](https://ieeexplore.ieee.org/document/9832735).
 
