@@ -1,6 +1,6 @@
 # Cricket Motion Prediction
 
-This project focuses on predicting the locomotion direction and velocity of crickets based on joint angle sequences extracted from walking videos. Deep learning models, including **LSTM**, **Hammerstein-LSTM**, **ARX LSTM**,  and **Transformer** architectures, are employed to capture the temporal dynamics of gait patterns.
+This project focuses on predicting the locomotion direction and velocity of crickets based on joint angle sequences extracted from walking videos. Deep learning models, including **LSTM**, **Hammerstein-LSTM**, **ARX-LSTM**,  and **Transformer** architectures, are employed to capture the temporal dynamics of gait patterns.
 
 Parts of this work have been presented at: 
 - **MHS  2021 (32nd 2021 International Symposium on Micro-NanoMechatronics and Human Science)** 
@@ -12,8 +12,8 @@ Related journal publications are available:
 
 ## Dataset
 
+- Joint positions were obtained from behavior videos through pose estimation using **[DeepLabCut](https://github.com/DeepLabCut/DeepLabCut)**, a deep learning-based markerless tracking tool.
 - The dataset consists of joint angle sequences extracted frame-by-frame from cricket walking videos.
-- Joint angles were obtained through pose estimation using **DeepLabCut**, a deep learning-based markerless tracking tool.
 - Each sample contains:
   - Input: A time series of joint angles.
   - Output: Corresponding walking direction and velocity.
