@@ -7,7 +7,7 @@ Parts of this work have been presented at:
 - **IROS 2022 (2022 IEEE/RSJ International Conference on Intelligent Robots and Systems)**
 
 Related journal publications are available:
-- [Prediction of Whole-Body Velocity and Direction From Local Leg Joint Movements in Insect Walking via LSTM Neural Networks](https://ieeexplore.ieee.org/document/9832735).
+- **IEEE Robotics and Automation Letters**: [Prediction of Whole-Body Velocity and Direction From Local Leg Joint Movements in Insect Walking via LSTM Neural Networks](https://ieeexplore.ieee.org/document/9832735).
 
 
 ## Dataset
