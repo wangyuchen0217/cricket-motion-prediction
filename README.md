@@ -18,14 +18,15 @@ This project focuses on predicting the locomotion direction and velocity of cric
 
 Understanding and predicting biological locomotion is a fundamental problem in biomechanics and robotics. This project aims to build predictive models that infer future walking directions and velocities of crickets using only their joint angle trajectories. The framework utilizes LSTM and Transformer-based sequence models to learn temporal dependencies in the gait data.
 
+
 ## Dataset
 
 - The dataset consists of joint angle sequences extracted frame-by-frame from cricket walking videos.
+- Joint angles were obtained through pose estimation using **DeepLabCut**, a deep learning-based markerless tracking tool.
 - Each sample contains:
   - Input: A time series of joint angles.
   - Output: Corresponding walking direction and velocity.
 
-*Note: Data pre-processing scripts for extracting joint angles are not included in this repository.*
 
 ## Methods
 
