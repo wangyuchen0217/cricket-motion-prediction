@@ -24,10 +24,3 @@ Two main types of deep learning models are used:
 - Transformer Models: Leverage self-attention mechanisms to model complex temporal dependencies and predict motion features.
 
 The models are trained to minimize the error between the predicted and true directions and velocities.
-
-## Installation
-
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/wangyuchen0217/cricket-motion-prediction.git
-   cd cricket-motion-prediction
