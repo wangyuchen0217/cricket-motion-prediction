@@ -3,7 +3,7 @@
 This project focuses on predicting the locomotion direction and velocity of crickets based on joint angle sequences extracted from walking videos. Deep learning models, including **LSTM**, **Hammerstein-LSTM**, **ARX-LSTM**,  and **Transformer** architectures, are employed to capture the temporal dynamics of gait patterns.
 
 Parts of this work have been presented at: 
-- **MHS  2021 (32nd 2021 International Symposium on Micro-NanoMechatronics and Human Science)** 
+- **MHS  2021 (32nd 2021 International Symposium on Micro-NanoMechatronics and Human Science)** ([Best Paper Award](https://www.mech.tohoku.ac.jp/news/prize/6200/))
 - **IROS 2022 (2022 IEEE/RSJ International Conference on Intelligent Robots and Systems)**
 
 Related journal publications are available:
