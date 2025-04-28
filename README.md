@@ -22,8 +22,24 @@ Related journal publications are available:
 
 ## Experiments
 
-Two main types of deep learning models are used:
-- LSTM (Long Short-Term Memory Networks): Capture temporal correlations in gait patterns over time.
-- Transformer Models: Leverage self-attention mechanisms to model complex temporal dependencies and predict motion features.
+Train the models and evaluation.
+```bash
+python model_train.py
+python model_evaluate.py
+```
 
-The models are trained to minimize the error between the predicted and true directions and velocities.
+There are four types of deep learning time-series prediction neural networks available:
+
+- **LSTM (Long Short-Term Memory Networks)**:  
+  Capture temporal correlations in joint angle sequences over time. Suitable for modeling sequential dependencies in biological locomotion.
+
+- **Hammerstein LSTM**:  
+  A model that combines a nonlinear static transformation (Hammerstein block) followed by an LSTM layer. This structure enhances the ability to model complex nonlinearities in the relationship between joint angles and locomotion features.
+
+- **ARX LSTM (AutoRegressive with eXogenous inputs LSTM)**:  
+  Incorporates past outputs and external inputs (e.g., previous direction and velocity) as part of the LSTM inputs, improving temporal prediction by explicitly modeling auto-regressive dependencies.
+
+- **Transformer Models**:  
+  Leverage self-attention mechanisms to model complex and long-range temporal dependencies in the gait patterns, allowing better prediction of motion features even over extended sequences.
+
+The models are trained to minimize the combined prediction error in walking direction and velocity using supervised learning.
