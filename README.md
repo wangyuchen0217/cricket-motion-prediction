@@ -16,13 +16,11 @@ Related journal publications are available:
     - Joint position data was extracted by DeepLabCut (Jupyter Notebook)
     - Joint angle were calculated by running <pre> ```python skeleton_analysis.py``` </pre>
 - Data preparation (including re-sample and smooth) <pre> ```python data_preprocess.py``` </pre>
-- The dataset consists of joint angle sequences extracted frame-by-frame from cricket walking videos. <pre> ```python dataset_generate.py``` </pre>
-- Each sample contains:
+- The dataset consists of joint angle sequences extracted frame-by-frame from cricket walking videos. <pre> ```python dataset_generate.py``` </pre> Each sample contains:
   - Input: A time series of joint angles.
-  - Output: Corresponding walking direction and velocity.
+  - Output: Corresponding walking direction and velocity. 
 
-
-## Methods
+## Experiments
 
 Two main types of deep learning models are used:
 - LSTM (Long Short-Term Memory Networks): Capture temporal correlations in gait patterns over time.
