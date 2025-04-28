@@ -13,9 +13,10 @@ Related journal publications are available:
 ## Dataset
 
 - Joint positions were obtained from behavior videos through pose estimation using **[DeepLabCut](https://github.com/DeepLabCut/DeepLabCut)**, a deep learning-based markerless tracking tool.
-    - Joint position data extracted by DeepLabCut (Jupyter Notebook)
-    - Joint angle calculation by <pre> ```python skeleton_analysis.py``` </pre>
-- The dataset consists of joint angle sequences extracted frame-by-frame from cricket walking videos.
+    - Joint position data was extracted by DeepLabCut (Jupyter Notebook)
+    - Joint angle were calculated by running <pre> ```python skeleton_analysis.py``` </pre>
+- Data preparation (including re-sample and smooth) <pre> ```python data_preprocess.py``` </pre>
+- The dataset consists of joint angle sequences extracted frame-by-frame from cricket walking videos. <pre> ```python dataset_generate.py``` </pre>
 - Each sample contains:
   - Input: A time series of joint angles.
   - Output: Corresponding walking direction and velocity.
