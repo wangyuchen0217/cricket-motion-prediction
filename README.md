@@ -50,13 +50,14 @@ The models are trained to minimize the combined prediction error in walking dire
 This project requires the following core Python packages:
 
 - torch >= 1.11
+- tensorflow >= 2.8
 - numpy >= 1.22
 - pandas >= 1.4
 - matplotlib >= 3.5
 - scikit-learn >= 1.0
 - tqdm >= 4.60
 
-Alternatively, install all dependencies using the provided requirements.txt file:
+Note that the dependencies required for DeepLabCut pose estimation are different. Install all dependencies using the provided requirements.txt file:
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-DLC.txt
 ```
