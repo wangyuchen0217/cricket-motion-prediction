@@ -9,6 +9,7 @@ Parts of this work have been presented at:
 Related journal publications are available:
 - **IEEE Robotics and Automation Letters**: [Prediction of Whole-Body Velocity and Direction From Local Leg Joint Movements in Insect Walking via LSTM Neural Networks](https://ieeexplore.ieee.org/document/9832735).
 
+![motion prediction framework](Evaluation/Figures/cricket-motion-prediction.gif)
 
 ## Dataset
 
