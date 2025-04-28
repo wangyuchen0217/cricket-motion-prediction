@@ -44,3 +44,19 @@ There are four types of deep learning time-series prediction neural networks ava
   Leverage self-attention mechanisms to model complex and long-range temporal dependencies in the gait patterns, allowing better prediction of motion features even over extended sequences.
 
 The models are trained to minimize the combined prediction error in walking direction and velocity using supervised learning.
+
+## Dependencies
+
+This project requires the following core Python packages:
+
+- torch >= 1.11
+- numpy >= 1.22
+- pandas >= 1.4
+- matplotlib >= 3.5
+- scikit-learn >= 1.0
+- tqdm >= 4.60
+
+Alternatively, install all dependencies using the provided requirements.txt file:
+```bash
+pip install -r requirements.txt
+```
