@@ -6,7 +6,7 @@ Parts of this work have been presented at:
 - **MHS  2021 (32nd 2021 International Symposium on Micro-NanoMechatronics and Human Science)** ([Best Paper Award](https://www.mech.tohoku.ac.jp/news/prize/6200/))
 - **IROS 2022 (2022 IEEE/RSJ International Conference on Intelligent Robots and Systems)**
 
-Related journal publications are available:
+A related journal publication is available:
 - **IEEE Robotics and Automation Letters**: [Prediction of Whole-Body Velocity and Direction From Local Leg Joint Movements in Insect Walking via LSTM Neural Networks](https://ieeexplore.ieee.org/document/9832735).
 
 ![motion prediction framework](Evaluation/Figures/cricket-motion-prediction.gif)
