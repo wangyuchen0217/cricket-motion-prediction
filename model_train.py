@@ -20,14 +20,22 @@ if __name__ == '__main__':
     ###### organize the input and output sequence ######
     input_pattern = "pattern1" # ["pattern1(All)","pattern2(ThC+2FTi hind leg)","pattern3(THC)"]
     window_size = 100
-    time_step = 1
+    time_step = 10
     ###### choose the test mode ###### 
+<<<<<<< HEAD
     out_mod = "sgl" # ["sgl(single-step)","mul(multi-step)"]
     out_content = "Direction" # ["Vel","Direction"]
     test_trails = ["c16", "c17","c18","c19","c20","c21"]
     ###### set the model ######
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_type = "arx" # ["lstm","hlstm","arx","trans"]
+=======
+    out_mod = "recursive" # ["estimation","prediction","recursive"]
+    out_content = "Vel" # ["Vel","Direction"]
+    test_trails = ["c16", "c17","c18","c19","c20","c21"]
+    ###### set the model ######
+    model_type = "arx" # ["lstm","hlstm","arx"]
+>>>>>>> 8007e5cec19c85d077973b323559d39c71990322
     node_number = 100 # ["lstm:83","hlstm:124","arx:100"]
     dropout_ratio = 0.5
     batch_size = 256

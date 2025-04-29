@@ -1,4 +1,5 @@
 .vscode/
+<<<<<<< HEAD
 
 DeepLabCut/
 
@@ -15,3 +16,12 @@ train_10.log
 train_20.log
 train_30.log
 train_50.log
+=======
+=======
+.vscode/sftp.json
+>>>>>>> 01df0c8a8c3e93afe3513e504e7d0cf65a0aade4
+
+__pycache__/
+
+transformer/
+>>>>>>> 8007e5cec19c85d077973b323559d39c71990322
