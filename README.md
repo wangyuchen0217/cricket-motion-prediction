@@ -56,8 +56,3 @@ This project requires the following core Python packages:
 - matplotlib >= 3.5
 - scikit-learn >= 1.0
 - tqdm >= 4.60
-
-Note that the dependencies required for DeepLabCut pose estimation are different. Install all dependencies using the provided requirements.txt file:
-```bash
-pip install -r requirements-DLC.txt
-```
